@@ -1,0 +1,80 @@
+@startuml
+title Diagramme de Classes pour Schoolo
+
+class Utilisateur {
+    +id: int
+    +nom: String
+    +email: String
+    +motDePasse: String
+    +planning: Planning
+    +profil: Profil
+}
+
+
+class Profil {
+    +id: int
+    +photo: String
+    +bio: String
+}
+
+class Eleve extends Utilisateur {
+    +niveauExperience: int
+}
+
+class Professeur extends Utilisateur {
+    +specialites: List<String>
+}
+
+class Parent extends Utilisateur {
+    +enfants: List<Eleve>
+}
+
+class Lecon {
+    +id: int
+    +titre: String
+    +contenu: String
+    +matiere: String
+    +estPublic: boolean
+    +professeur: Professeur
+}
+
+class Controle {
+    +id: int
+    +titre: String
+    +date: Date
+    +resultats: List<Resultat>
+    +lecon: Lecon
+}
+
+class Resultat {
+    +id: int
+    +note: float
+    +eleve: Eleve
+    +controle: Controle
+}
+
+class Planning {
+    +id: int
+    +taches: List<Tache>
+}
+
+class Tache {
+    +id: int
+    +description: String
+    +dateHeure: DateTime
+}
+
+
+Utilisateur "1" <|-- "1" Eleve
+Utilisateur "1" <|-- "1" Professeur
+Utilisateur "1" <|-- "1" Parent
+
+Utilisateur "0..*" --> "1" Planning
+Parent "0..*" --> "0..*" Eleve
+Lecon "0..*" --> "1" Professeur
+Controle "0..*" --> "1" Lecon
+Resultat "0..*" --> "1" Eleve
+Controle "0..*" --> "0..*" Resultat
+Planning "1" --> "0..*" Tache
+
+@enduml
