@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ lesson.title }}</title>
+</head>
+<body> 
+    <h1>{{ lesson.title }}</h1>
+    <p><strong>Matière :</strong> {{ lesson.subject }}</p>
+    <p>{{ lesson.content }}</p> 
+    <a href="{% url 'lessons_list' %}">Retour à la liste des leçons</a>
+</body>
+</html>
