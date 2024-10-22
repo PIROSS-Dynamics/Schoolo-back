@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,8 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # Applications projets
-    'lessons',
+    # Applications créées
+    "apps.lessons",
     # Applications par défaut
     'django.contrib.admin',
     'django.contrib.auth',
@@ -54,10 +54,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'schoolo_project.urls'
 
+TEMPLATES_URL ="templates/"
+TEMPLATES_ROOT = os.path.join(BASE_DIR,TEMPLATES_URL)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_ROOT,],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,6 +121,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR,STATIC_URL)
+
+
+MEDIA_URL = "media/"
+MEIDA_ROOT = os.path.join(BASE_DIR,MEDIA_URL)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
