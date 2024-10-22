@@ -1,0 +1,17 @@
+<!-- lessons/templates/lessons/subjects_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des matières</title>
+</head>
+<body>
+    <h1>Choisissez une matière</h1>
+    <div>
+        {% for subject in subjects %}
+            <a href="{% url 'lessons_list' %}?subject={{ subject }}">
+                <button>{{ subject }}</button>
+            </a>
+        {% endfor %}
+    </div>
+</body>
+</html>

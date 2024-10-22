@@ -1,8 +1,9 @@
 
 from django.urls import path
-from .views import lessons_list, lesson_detail
+from . import views
 
 urlpatterns = [
-    path('', lessons_list, name='lessons_list'),  # Point d'entrée vers la liste des leçons
-    path('lesson/<int:lesson_id>/', lesson_detail, name='lesson_detail'),  # Détail d'une leçon
+    path('', views.subjects_list, name='subjects_list'), # Liste des sujets sur l'entrée dans l'app
+    path('list', views.lessons_list, name='lessons_list'),  # Liste des leçons
+    path('<int:lesson_id>/', views.lesson_detail, name='lesson_detail'),  # Détail d'une leçon
 ]
