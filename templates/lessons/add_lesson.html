@@ -1,0 +1,16 @@
+<!-- lessons/templates/lessons/add_lesson.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ajouter une leçon</title>
+</head>
+<body>
+    <h1>Ajouter une nouvelle leçon</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Enregistrer</button>
+    </form>
+    <a href="{% url 'lessons_list' %}">Retour à la liste des leçons</a>
+</body>
+</html>
