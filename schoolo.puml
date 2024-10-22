@@ -65,16 +65,16 @@ class Tache {
 }
 
 
-Utilisateur "1" <|-- "1" Eleve
-Utilisateur "1" <|-- "1" Professeur
-Utilisateur "1" <|-- "1" Parent
 
-Utilisateur "0..*" --> "1" Planning
+Utilisateur  --> "1" Planning
+Utilisateur  --> "1" Profil
 Parent "0..*" --> "0..*" Eleve
 Lecon "0..*" --> "1" Professeur
 Controle "0..*" --> "1" Lecon
 Resultat "0..*" --> "1" Eleve
 Controle "0..*" --> "0..*" Resultat
 Planning "1" --> "0..*" Tache
+
+
 
 @enduml
