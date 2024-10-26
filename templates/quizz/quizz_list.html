@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des Quizz</title>
+</head>
+<body>
+    <h1>Liste des Quizz</h1>
+    <ul>
+        {% for quizz in quizzs %}
+            <li>
+                <a href="{% url 'quizz_detail' quizz.id %}">{{ quizz.title }} - {{ quizz.subject }} ({{ quizz.number_of_questions }} questions)</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

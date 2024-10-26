@@ -26,12 +26,11 @@ class Question(models.Model):
 
     quizz = models.ForeignKey(Quizz, on_delete=models.CASCADE, related_name='questions')
     text = models.CharField(max_length=500)
-    order = models.PositiveIntegerField()
     question_type = models.CharField(max_length=10, choices=QUESTION_TYPES)
     correct_answer = models.CharField(max_length=300, blank=True, null=True)  # Pour les questions à réponse écrite
 
     def __str__(self):
-        return f"{self.order}. {self.text}"
+        return self.text
 
 
 class Choice(models.Model):

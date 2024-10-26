@@ -21,4 +21,5 @@ import apps.lessons.urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('lessons/', include('apps.lessons.urls')),
+    path('quizz/', include('apps.quizz.urls')),
 ]

@@ -74,7 +74,6 @@ class Quizz {
 class Question {
     +id: int
     +text: String
-    +order: int
     +question_type: String
     +correct_answer: String
 }
