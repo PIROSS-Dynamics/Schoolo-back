@@ -63,9 +63,30 @@ class Tache {
     +description: String
     +dateHeure: DateTime
 }
+class Quizz {
+    +id: int
+    +title: String
+    +subject: String
+    +number_of_questions: int
+    +is_public: boolean
+}
 
+class Question {
+    +id: int
+    +text: String
+    +order: int
+    +question_type: String
+    +correct_answer: String
+}
 
+class Choice {
+    +id: int
+    +text: String
+    +is_correct: boolean
+}
 
+Quizz "1" --> "*" Question : contains
+Question "0..*" --> "*" Choice : has
 Utilisateur  --> "1" Planning
 Utilisateur  --> "1" Profil
 Parent "0..*" --> "0..*" Eleve
