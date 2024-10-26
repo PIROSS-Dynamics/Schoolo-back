@@ -16,10 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-import apps.lessons.urls
+from .views import home
 
 urlpatterns = [
+    #Page admin
     path('admin/', admin.site.urls),
+    #Page principal
+    path('', home, name='home'),
+    #Pages principales des apps
     path('lessons/', include('apps.lessons.urls')),
     path('quizz/', include('apps.quizz.urls')),
 ]
