@@ -2,18 +2,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Ajouter une leçon</title>
+    <title>Ajouter une Leçon</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <div class="container">
-        <h1>Ajouter une Nouvelle Leçon</h1>
+        <h1>Ajouter une Leçon</h1>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn">Enregistrer</button>
+
+            <button type="submit">Ajouter la Leçon</button>
         </form>
-        <a href="{% url 'lessons_list' %}" class="back-link">Retour à la Liste des Leçons</a>
+        <div class="link-card">
+            <a href="{% url 'lessons_list' %}">Retour à la Liste des Leçons</a>
+            <a href="{% url 'home' %}">Retour à la Page d'Accueil</a>
+        </div>
     </div>
 </body>
 </html>

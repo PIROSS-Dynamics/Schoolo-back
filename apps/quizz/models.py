@@ -1,5 +1,7 @@
 
 from django.db import models
+from apps.users.models import Teacher
+
 
 class Quizz(models.Model):
     SUBJECT_CHOICES = [
@@ -11,6 +13,7 @@ class Quizz(models.Model):
 
     title = models.CharField(max_length=200)
     subject = models.CharField(max_length=50, choices=SUBJECT_CHOICES)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='quizzes')
     number_of_questions = models.PositiveIntegerField()
     is_public = models.BooleanField(default=True)
 

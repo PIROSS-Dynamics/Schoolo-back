@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Lesson
 from .forms import LessonForm
+from apps.users.models import Teacher
+
 
 
 def subjects_list(request):
@@ -19,6 +21,7 @@ def lesson_detail(request, lesson_id):
     lesson = get_object_or_404(Lesson, pk=lesson_id)
     return render(request, 'lessons/lesson_detail.html', {'lesson': lesson})
 
+
 def add_lesson(request):
     if request.method == 'POST':
         form = LessonForm(request.POST)
@@ -27,4 +30,6 @@ def add_lesson(request):
             return redirect('lessons_list')  # Rediriger vers la liste des leçons après l'ajout
     else:
         form = LessonForm()
-    return render(request, 'lessons/add_lesson.html', {'form': form})
+    
+    teachers = Teacher.objects.all()  # Récupérer tous les enseignants
+    return render(request, 'lessons/add_lesson.html', {'form': form, 'teachers': teachers})

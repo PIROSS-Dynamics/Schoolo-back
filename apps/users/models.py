@@ -1,96 +1,64 @@
 from django.db import models
 
-        # -- Tache
-class Tache(models.Model):
-    nom = models.CharField(max_length=100)
+# -- Task
+class Task(models.Model):
+    name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    date_debut = models.DateTimeField()
-    date_fin = models.DateTimeField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
 
     def __str__(self):
-        return f"Tâche: {self.nom} (Début: {self.date_debut}, Fin: {self.date_fin})"
+        return f"Task: {self.name} (Start: {self.start_date}, End: {self.end_date})"
 
-
-
-        # -- Planning
-class Planning(models.Model):
-    taches = models.ManyToManyField(Tache)
+# -- Schedule
+class Schedule(models.Model):
+    tasks = models.ManyToManyField(Task)
 
     def __str__(self):
-        return f"Planning avec {self.taches.count()} tâche(s)"
+        return f"Schedule with {self.tasks.count()} task(s)"
 
-
-
-        # -- Profil
-class Profil(models.Model):
+# -- Profile
+class Profile(models.Model):
     photo = models.CharField(max_length=200)
     bio = models.TextField()
 
     def __str__(self):
-        return f"Profil (Photo: {self.photo}, Bio: {self.bio[:30]}...)"
+        return f"Profile (Photo: {self.photo}, Bio: {self.bio[:30]}...)"
 
-
-
-
-        # -- Utilisateur
-class Utilisateur(models.Model):
-    prenom = models.CharField(max_length=50)
-    nom = models.CharField(max_length=50)
+# -- User
+class User(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=254)
-    motDePasse = models.CharField(max_length=50)
-    planning = models.ForeignKey(Planning, on_delete=models.SET_NULL, null=True)
-    profil = models.OneToOneField(Profil, on_delete=models.CASCADE)
+    password = models.CharField(max_length=50)
+    schedule = models.ForeignKey(Schedule, on_delete=models.SET_NULL, null=True)
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Utilisateur: {self.prenom} {self.nom} (Email: {self.email})"
+        return f"User: {self.first_name} {self.last_name} (Email: {self.email})"
 
-
-
-        # -- Eleve
-class Eleve(Utilisateur):
-    niveauExperience = models.IntegerField(default=0)
+# -- Student
+class Student(User):
+    experience_level = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"Élève: {self.prenom} {self.nom} - Niveau: {self.niveauExperience}"
+        return f"Student: {self.first_name} {self.last_name} - Level: {self.experience_level}"
 
-
-
-        # -- Specilité (Specilaity)
-class Speciality(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return f"Spécialité: {self.name}"
-
-
-
-        # -- Professeur
-class Professeur(Utilisateur):
-    specialities = models.ManyToManyField(Speciality, blank=True)
+# -- Teacher
+class Teacher(User):
+    lessons = models.ManyToManyField(
+        'lessons.Lesson',
+        blank=True,
+        related_name='teachers'  # Changez le nom ici si nécessaire
+    )
 
     def __str__(self):
-        specialities_list = ", ".join([s.name for s in self.specialities.all()])
-        return f"Professeur: {self.prenom} {self.nom} - Spécialités: {specialities_list or 'Aucune'}"
+        return f"Teacher: {self.first_name} {self.last_name}"
 
-
-
-        # -- Parent
-class Parent(Utilisateur):
-    enfants = models.ManyToManyField(Eleve)
+# -- Parent
+class Parent(User):
+    children = models.ManyToManyField(Student)
 
     def __str__(self):
-        enfants_list = ", ".join([f"{enfant.prenom} {enfant.nom}" for enfant in self.enfants.all()])
-        return f"Parent: {self.prenom} {self.nom} - Enfants: {enfants_list or 'Aucun'}"
-
-
-
-        # -- Lecon
-class Lecon(models.Model):
-    titre = models.CharField(max_length=100)
-    contenu = models.CharField(max_length=255)
-    matiere = models.CharField(max_length=100)
-    estPublic = models.BooleanField(default=False)
-    professeur = models.ForeignKey(Professeur, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"Leçon: {self.titre} (Matière: {self.matiere}, Public: {'Oui' if self.estPublic else 'Non'})"
+        children_list = ", ".join([f"{child.first_name} {child.last_name}" for child in self.children.all()])
+        return f"Parent: {self.first_name} {self.last_name} - Children: {children_list or 'None'}"

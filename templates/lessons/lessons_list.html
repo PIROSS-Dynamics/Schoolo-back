@@ -10,7 +10,7 @@
         <h1>Liste des Leçons{% if subject %} de {{ subject }}{% endif %}</h1>
         <ul class="list">
             {% for lesson in lessons %}
-                <li><a href="{% url 'lesson_detail' lesson.id %}">{{ lesson.title }}</a></li>
+                <li><a href="{% url 'lesson_detail' lesson.id %}">{{ lesson.title }} - {{ lesson.teacher }} </a></li>
             {% endfor %}
         </ul>
         <div class="link-card">

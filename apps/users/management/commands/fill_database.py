@@ -1,7 +1,7 @@
 import random
 from django.core.management.base import BaseCommand
 from faker import Faker
-from apps.users.models import Utilisateur, Professeur, Eleve, Parent, Tache, Planning, Speciality, Profil
+from apps.users.models import User, Teacher, Student, Parent, Task, Schedule, Profile
 
 fake = Faker("fr_FR")
 
@@ -9,90 +9,81 @@ class Command(BaseCommand):
     help = 'Populates the database with random data'
 
     def handle(self, *args, **kwargs):
-        # Create some specialities
-        for _ in range(5):
-            speciality = Speciality.objects.create(name=fake.job())
-        
-        # Create some utilisateurs (generic users)
+        # Create some profiles
         for _ in range(20):
-            # Create a profile first
-            profile = Profil.objects.create(
-                photo=fake.image_url(),  # You can replace this with any placeholder image URL
+            profile = Profile.objects.create(
+                photo=fake.image_url(),
                 bio=fake.text(max_nb_chars=200)
             )
             
             # Create the user and assign the profile
-            user = Utilisateur.objects.create(
-                prenom=fake.first_name(),
-                nom=fake.last_name(),
+            user = User.objects.create(
+                first_name=fake.first_name(),
+                last_name=fake.last_name(),
                 email=fake.email(),
-                motDePasse=fake.password(),
-                profil=profile  # Associate the profile here
+                password=fake.password(),
+                profile=profile  # Associate the profile here
             )
 
-        # Create some professeurs and link specialities
+        # Create some teachers
         for _ in range(5):
-            # Create a profile for the professor
-            profile = Profil.objects.create(
+            profile = Profile.objects.create(
                 photo=fake.image_url(),
                 bio=fake.text(max_nb_chars=200)
             )
             
-            professeur = Professeur.objects.create(
-                prenom=fake.first_name(),
-                nom=fake.last_name(),
+            teacher = Teacher.objects.create(
+                first_name=fake.first_name(),
+                last_name=fake.last_name(),
                 email=fake.email(),
-                motDePasse=fake.password(),
-                profil=profile
+                password=fake.password(),
+                profile=profile
             )
-            professeur.specialities.set(Speciality.objects.order_by('?')[:2])
 
-        # Create some eleves
+        # Create some students
         for _ in range(10):
-            # Create a profile for the eleve
-            profile = Profil.objects.create(
+            profile = Profile.objects.create(
                 photo=fake.image_url(),
                 bio=fake.text(max_nb_chars=200)
             )
             
-            eleve = Eleve.objects.create(
-                prenom=fake.first_name(),
-                nom=fake.last_name(),
+            student = Student.objects.create(
+                first_name=fake.first_name(),
+                last_name=fake.last_name(),
                 email=fake.email(),
-                motDePasse=fake.password(),
-                profil=profile,
-                niveauExperience=random.randint(1, 5)
+                password=fake.password(),
+                profile=profile,
+                experience_level=random.randint(1, 5)
             )
 
         # Create some parents and link children
         for _ in range(5):
-            # Create a profile for the parent
-            profile = Profil.objects.create(
+            profile = Profile.objects.create(
                 photo=fake.image_url(),
                 bio=fake.text(max_nb_chars=200)
             )
             
             parent = Parent.objects.create(
-                prenom=fake.first_name(),
-                nom=fake.last_name(),
+                first_name=fake.first_name(),
+                last_name=fake.last_name(),
                 email=fake.email(),
-                motDePasse=fake.password(),
-                profil=profile
+                password=fake.password(),
+                profile=profile
             )
-            parent.enfants.set(Eleve.objects.order_by('?')[:2])
+            parent.children.set(Student.objects.order_by('?')[:2])
 
         # Create tasks
         for _ in range(10):
-            tache = Tache.objects.create(
-                nom=fake.sentence(),
+            task = Task.objects.create(
+                name=fake.sentence(),
                 description=fake.paragraph(),
-                date_debut=fake.date_time_this_year(),
-                date_fin=fake.date_time_this_year()
+                start_date=fake.date_time_this_year(),
+                end_date=fake.date_time_this_year()
             )
 
-        # Create planning and add tasks to it
+        # Create schedules and add tasks to them
         for _ in range(5):
-            planning = Planning.objects.create()
-            planning.taches.set(Tache.objects.order_by('?')[:3])
+            schedule = Schedule.objects.create()
+            schedule.tasks.set(Task.objects.order_by('?')[:3])
 
         self.stdout.write(self.style.SUCCESS('Database populated successfully!'))

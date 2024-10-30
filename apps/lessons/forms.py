@@ -1,9 +1,12 @@
 # lessons/forms.py
 from django import forms
-from .models import Lesson
+from .models import Lesson, Teacher
 
 class LessonForm(forms.ModelForm):
     class Meta:
         model = Lesson
-        fields = ['title', 'subject', 'content', 'is_public']
+        fields = ['title', 'subject','teacher', 'content', 'is_public']
+        widgets = {
+            'teacher': forms.Select(attrs={'class': 'form-control'}),  
+        }
 

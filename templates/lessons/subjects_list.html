@@ -8,12 +8,16 @@
 <body>
     <div class="container">
         <h1>Choisissez une Matière</h1>
-        <div class="button-group">
-            {% for subject in subjects %}
-                <a href="{% url 'lessons_list' %}?subject={{ subject }}" class="btn">{{ subject }}</a>
-            {% endfor %}
+        <div class="link-card"></div>
+            <div class="button-group">
+                {% for subject in subjects %}
+                    <a href="{% url 'lessons_list' %}?subject={{ subject }}" class="btn">{{ subject }}</a>
+                {% endfor %}
+            </div>
+            <a href="{% url 'add_lesson' %}" class="btn">Ajouter une Nouvelle Leçon</a>
+            <a href="{% url 'home' %}" class="back-link">Retour à la Page d'Accueil</a>
         </div>
-        <a href="{% url 'add_lesson' %}" class="btn">Ajouter une Nouvelle Leçon</a>
     </div>
+    
 </body>
 </html>
