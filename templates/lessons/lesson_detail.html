@@ -10,6 +10,10 @@
         <h1>{{ lesson.title }}</h1>
         <p><strong>Matière :</strong> {{ lesson.subject }}</p>
         <p>{{ lesson.content }}</p>
+
+        <!-- Bouton Modifier -->
+        <a href="{% url 'modify_lesson' lesson.id %}" class="btn">Modifier</a>
+
         <a href="{% url 'lessons_list' %}?subject={{ lesson.subject }}" class="back-link">Retour à la Liste des Leçons</a>
     </div>
 </body>

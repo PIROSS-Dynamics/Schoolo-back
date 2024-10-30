@@ -33,3 +33,16 @@ def add_lesson(request):
     
     teachers = Teacher.objects.all()  # Récupérer tous les enseignants
     return render(request, 'lessons/add_lesson.html', {'form': form, 'teachers': teachers})
+
+def modify_lesson(request, lesson_id):
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+
+    if request.method == 'POST':
+        form = LessonForm(request.POST, instance=lesson)
+        if form.is_valid():
+            form.save()
+            return redirect('lesson_detail', lesson_id=lesson.id)  # Rediriger vers la page de détail de la leçon
+    else:
+        form = LessonForm(instance=lesson)
+
+    return render(request, 'lessons/modify_lesson.html', {'form': form, 'lesson': lesson})

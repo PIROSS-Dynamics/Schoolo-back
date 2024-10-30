@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modifier {{ lesson.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Modifier {{ lesson.title }}</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}  <!-- Affichez le formulaire ici -->
+            <button type="submit" class="btn">Enregistrer les Modifications</button>
+        </form>
+        <a href="{% url 'lesson_detail' lesson.id %}" class="back-link">Annuler</a>
+    </div>
+</body>
+</html>
