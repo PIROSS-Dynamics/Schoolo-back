@@ -1,18 +1,21 @@
+{% load static%}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Backend S'cool</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenue sur S'cool (Backend)</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
 </head>
 <body>
-    <h1>Bienvenue sur S'cool (Backend) :)</h1>
-    <div>
-        <a href="{% url 'quizz_list' %}">Accéder aux Quizz</a>
-    </div>
-    <div>
-        <a href="{% url 'lessons_list' %}">Accéder aux Leçons</a>
-    </div>
-    <div>
-        <a href="/admin/">Accéder à la page Admin</a> <!-- Lien pour accéder à la page admin -->
+    <div class="container">
+        <h1>Bienvenue sur S'cool (Backend)</h1>
+        <div class="link-card">
+            <a href="{% url 'quizz_list' %}">Accéder aux Quizz</a>
+            <a href="{% url 'lessons_list' %}">Accéder aux Leçons</a>
+            <a href="/admin/">Accéder à la page Admin</a> <!-- Lien pour accéder à la page admin -->
+        </div>
     </div>
 </body>
 </html>

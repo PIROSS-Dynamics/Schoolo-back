@@ -61,7 +61,7 @@ class Planning {
 class Tache {
     +id: int
     +description: String
-    +dateHeure: DateTime
+    +dateHeure
 }
 class Quizz {
     +id: int

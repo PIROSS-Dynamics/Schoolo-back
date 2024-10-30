@@ -1,11 +1,15 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Résultat du Quizz</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>Votre Score</h1>
-    <p>Vous avez obtenu {{ score }} sur {{ total }}.</p>
-    <a href="{% url 'quizz_list' %}">Retour à la liste des Quizz</a>
+    <div class="container">
+        <h1>Votre Score</h1>
+        <p>Vous avez obtenu {{ score }} sur {{ total }}.</p>
+        <a href="{% url 'quizz_list' %}" class="back-link">Retour à la Liste des Quizz</a>
+    </div>
 </body>
 </html>

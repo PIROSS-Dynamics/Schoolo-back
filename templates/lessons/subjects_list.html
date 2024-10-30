@@ -1,18 +1,19 @@
-<!-- lessons/templates/lessons/subjects_list.html -->
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Liste des matières</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>Choisissez une matière</h1>
-    <div>
-        {% for subject in subjects %}
-            <a href="{% url 'lessons_list' %}?subject={{ subject }}">
-                <button>{{ subject }}</button>
-            </a>
-        {% endfor %}
+    <div class="container">
+        <h1>Choisissez une Matière</h1>
+        <div class="button-group">
+            {% for subject in subjects %}
+                <a href="{% url 'lessons_list' %}?subject={{ subject }}" class="btn">{{ subject }}</a>
+            {% endfor %}
+        </div>
+        <a href="{% url 'add_lesson' %}" class="btn">Ajouter une Nouvelle Leçon</a>
     </div>
-    <a href="{% url 'add_lesson' %}">Ajouter une nouvelle leçon</a>
 </body>
 </html>

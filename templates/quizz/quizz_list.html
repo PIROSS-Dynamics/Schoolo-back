@@ -1,19 +1,21 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Liste des Quizz</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>Liste des Quizz</h1>
-    <ul>
-        {% for quizz in quizzs %}
-            <li>
-                <a href="{% url 'quizz_detail' quizz.id %}">{{ quizz.title }} - {{ quizz.subject }} ({{ quizz.number_of_questions }} questions)</a>
-            </li>
-        {% endfor %}
-    </ul>
-    <div>
-        <a href="{% url 'home' %}">Retour à la page d'accueil</a> 
+    <div class="container">
+        <h1>Liste des Quizz</h1>
+        <ul class="list">
+            {% for quizz in quizzs %}
+                <li>
+                    <a href="{% url 'quizz_detail' quizz.id %}">{{ quizz.title }} - {{ quizz.subject }} ({{ quizz.number_of_questions }} questions)</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'home' %}" class="back-link">Retour à la Page d'Accueil</a>
     </div>
 </body>
 </html>

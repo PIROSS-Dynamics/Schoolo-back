@@ -1,16 +1,19 @@
-<!-- lessons/templates/lessons/add_lesson.html -->
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Ajouter une leçon</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>Ajouter une nouvelle leçon</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Enregistrer</button>
-    </form>
-    <a href="{% url 'lessons_list' %}">Retour à la liste des leçons</a>
+    <div class="container">
+        <h1>Ajouter une Nouvelle Leçon</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn">Enregistrer</button>
+        </form>
+        <a href="{% url 'lessons_list' %}" class="back-link">Retour à la Liste des Leçons</a>
+    </div>
 </body>
 </html>
