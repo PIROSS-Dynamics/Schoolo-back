@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ajouter un Quizz</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script>
+        let questionCount = 0;
+
+        function addQuestion() {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question';
+            questionDiv.setAttribute('data-question-index', questionCount);
+
+            questionDiv.innerHTML = `
+                <h3>Question ${questionCount + 1}</h3>
+                <label>Texte de la question :</label>
+                <input type="text" name="question_${questionCount}_text" required>
+
+                <label>Type de question :</label>
+                <select name="question_${questionCount}_type" required onchange="toggleChoices(this, ${questionCount})">
+                    <option value="" disabled selected>Choisissez un type de question</option>
+                    <option value="text">Text</option>
+                    <option value="choice">Choix multiple</option>
+                </select>
+
+                <div class="text-answer" id="text-answer-${questionCount}" style="display:none;">
+                    <label>Bonne réponse (texte) :</label>
+                    <input type="text" name="question_${questionCount}_correct_answer">
+                </div>
+
+                <div class="choices" id="choices-${questionCount}" style="display:none;">
+                    <h4>Choix multiples :</h4>
+                    <div class="choice">
+                        <input type="text" name="choices_${questionCount}_0" placeholder="Choix 1">
+                        <input type="radio" name="correct_choice_${questionCount}" value="0" required> Bonne réponse
+                    </div>
+                    <button type="button" onclick="addChoice(${questionCount})">Ajouter un choix</button>
+                </div>
+                <button type="button" onclick="removeQuestion(this)">Supprimer cette question</button>
+            `;
+
+            document.getElementById('questions').appendChild(questionDiv);
+            questionCount++;
+        }
+
+        function toggleChoices(select, questionIndex) {
+            const textAnswerDiv = document.getElementById(`text-answer-${questionIndex}`);
+            const choicesDiv = document.getElementById(`choices-${questionIndex}`);
+
+            if (select.value === 'text') {
+                textAnswerDiv.style.display = 'block';
+                choicesDiv.style.display = 'none';
+                document.querySelectorAll(`#choices-${questionIndex} input`).forEach(input => input.required = false);
+            } else if (select.value === 'choice') {
+                textAnswerDiv.style.display = 'none';
+                choicesDiv.style.display = 'block';
+                document.querySelector(`#choices-${questionIndex} .choice input[type="radio"]`).required = true;
+            }
+        }
+
+        function addChoice(questionIndex) {
+            const choicesDiv = document.getElementById(`choices-${questionIndex}`);
+            const choiceCount = choicesDiv.querySelectorAll('.choice').length;
+            
+            const choiceDiv = document.createElement('div');
+            choiceDiv.className = 'choice';
+            choiceDiv.innerHTML = `
+                <input type="text" name="choices_${questionIndex}_${choiceCount}" placeholder="Choix ${choiceCount + 1}">
+                <input type="radio" name="correct_choice_${questionIndex}" value="${choiceCount}" required> Bonne réponse
+            `;
+
+            choicesDiv.insertBefore(choiceDiv, choicesDiv.lastElementChild);
+        }
+
+        function removeQuestion(button) {
+            const questionDiv = button.closest('.question');
+            questionDiv.remove();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Ajouter un Nouveau Quizz</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ quizz_form.as_p }}
+            <div id="questions">
+                <h2>Questions :</h2>
+            </div>
+            <button type="button" onclick="addQuestion()">Ajouter une question</button>
+            <button type="submit">Ajouter le Quizz</button>
+        </form>
+        <a href="{% url 'quizz_list' %}" class="back-link">Retour à la Liste des Quizz</a>
+    </div>
+</body>
+</html>
