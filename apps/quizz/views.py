@@ -6,6 +6,11 @@ from .forms import QuizzForm, QuestionForm, ChoiceForm
 from django.forms import formset_factory
 from django.db import transaction
 
+#### GESTION FRONT ####
+
+
+#### GESTION BACK ####
+
 def quizz_list(request):
     quizzs = Quizz.objects.filter(is_public=True)
     return render(request, 'quizz/quizz_list.html', {'quizzs': quizzs})

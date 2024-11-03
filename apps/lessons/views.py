@@ -2,8 +2,30 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Lesson
 from .forms import LessonForm
 from apps.users.models import Teacher
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Lesson
+from .serializers import LessonSerializer
 
+#### GESTION FRONT ####
 
+class LessonListView(APIView):
+    def get(self, request):
+        lessons = Lesson.objects.filter(is_public=True)
+        serializer = LessonSerializer(lessons, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class LessonDetailView(APIView):
+    def get(self, request, lesson_id):
+        try:
+            lesson = Lesson.objects.get(id=lesson_id)
+            serializer = LessonSerializer(lesson)  
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Lesson.DoesNotExist:
+            return Response({'error': 'Leçon non trouvée.'}, status=status.HTTP_404_NOT_FOUND)
+
+#### GESTION BACK ####
 
 def subjects_list(request):
     subjects = ["Maths", "Français", "Histoire", "Anglais"]

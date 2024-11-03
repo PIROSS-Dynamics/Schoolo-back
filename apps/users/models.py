@@ -54,6 +54,9 @@ class Teacher(User):
 
     def __str__(self):
         return f"Teacher: {self.first_name} {self.last_name}"
+    
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
 
 # -- Parent
 class Parent(User):
