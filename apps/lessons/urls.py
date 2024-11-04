@@ -9,6 +9,7 @@ urlpatterns = [
     path('api/lessonslist/', views.LessonListView.as_view(), name='lesson-list'),
     path('api/lessonslist/subject/<str:subject>/', views.LessonListView.as_view(), name='lessons-by-subject'),
     path('api/lessonslist/detail/<int:lesson_id>/', views.LessonDetailView.as_view(), name='lesson-detail'),
+    path('api/lessonslist/add', views.CreateLessonView.as_view(), name='create-lesson'),
     
     ## GESTION BACK ##
     path('', views.subjects_list, name='subjects_list'), # Liste des sujets sur l'entrée dans l'app

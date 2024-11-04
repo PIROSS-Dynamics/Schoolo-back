@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Lesson
 from .serializers import LessonSerializer
+from rest_framework.decorators import api_view
 
 #### GESTION FRONT ####
 
@@ -32,6 +33,14 @@ class LessonDetailView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Lesson.DoesNotExist:
             return Response({'error': 'Leçon non trouvée.'}, status=status.HTTP_404_NOT_FOUND)
+
+class CreateLessonView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = LessonSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #### GESTION BACK ####
 

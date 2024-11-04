@@ -12,4 +12,5 @@ urlpatterns = [
     #Pages principales des apps
     path('lessons/', include('apps.lessons.urls')),
     path('quizz/', include('apps.quizz.urls')),
+    path('users/', include('apps.users.urls')),
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

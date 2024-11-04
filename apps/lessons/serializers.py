@@ -6,4 +6,8 @@ class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ['id', 'subject', 'title', 'teacher_name', 'is_public', 'content']
+        fields = ['id', 'subject', 'title', 'teacher_name', 'teacher', 'is_public', 'content']
+        extra_kwargs = {
+            'teacher': {'required': True}  # S'assurer que le champ teacher est requis
+        }
+
