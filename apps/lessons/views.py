@@ -11,8 +11,16 @@ from .serializers import LessonSerializer
 #### GESTION FRONT ####
 
 class LessonListView(APIView):
-    def get(self, request):
-        lessons = Lesson.objects.filter(is_public=True)
+    def get(self, request, subject=None):
+        if subject:
+            # Vérifie que le sujet est valide
+            if subject.capitalize() in dict(Lesson.SUBJECT_CHOICES).keys():
+                lessons = Lesson.objects.filter(is_public=True, subject=subject.capitalize())
+            else:
+                return Response({"error": "Sujet non valide"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            lessons = Lesson.objects.filter(is_public=True)
+        
         serializer = LessonSerializer(lessons, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
