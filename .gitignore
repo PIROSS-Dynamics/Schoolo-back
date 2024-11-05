@@ -1,0 +1,5 @@
+# Ignorer les fichiers macOS
+.DS_Store
+
+db.sqlite3
+
