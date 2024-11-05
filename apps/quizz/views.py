@@ -5,9 +5,18 @@ from .models import Quizz, Question, Choice
 from .forms import QuizzForm, QuestionForm, ChoiceForm
 from django.forms import formset_factory
 from django.db import transaction
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import QuizzSerializer
 
 #### GESTION FRONT ####
 
+class QuizzListView(APIView):
+    def get(self, request):
+        quizz = Quizz.objects.filter(is_public=True)  # Filtre pour les quizz publics uniquement
+        serializer = QuizzSerializer(quizz, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 #### GESTION BACK ####
 
