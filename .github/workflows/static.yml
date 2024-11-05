@@ -2,9 +2,10 @@
 name: Deploy static content to Pages
 
 on:
-  # Runs on pushes targeting the default branch
   push:
-    branches: ["main", "develop", "sonarcloud"]
+    branches: [ "main", "develop", "sonarcloud" ]
+  pull_request:
+    branches: [ "main", "develop", "sonarcloud" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -22,22 +23,22 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  Analysis:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/checkout@v2
+
+      - name: Analyze with SonarCloud
+        uses: SonarSource/sonarcloud-github-action@v2.2.0
+        
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          # Assurez-vous que le token est configuré dans les secrets du repo
         with:
-          # Upload entire repository
-          path: 'html5up-read-only'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          # Remplacez par vos clés de projet et d'organisation
+          args:
+            -Dsonar.projectKey=<PIROSS-Dynamics_Schoolo-back>
+            -Dsonar.organization=<piross-dynamics>
+
