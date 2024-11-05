@@ -2,8 +2,11 @@ import os
 import ast
 import subprocess
 
+# Définir le chemin racine du projet (un niveau au-dessus du dossier actuel)
+base_dir = os.path.dirname(os.path.dirname(__file__))
+
 def get_apps_structure():
-    apps_dir = "apps"
+    apps_dir = os.path.join(base_dir, "apps")
     apps_structure = {}
 
     for app in os.listdir(apps_dir):
@@ -54,6 +57,7 @@ def get_apps_structure():
     return apps_structure
 
 def generate_index_adoc():
+    # Contenu initial de l'index.adoc
     content = """= Documentation du Projet SCHOOLO
 Auteur: Votre Nom <votre.email@example.com>
 :toc:
@@ -73,6 +77,7 @@ Pour installer et configurer le projet, assurez-vous d'avoir Python et les dépe
 == Structure des Applications
 
 """
+    # Récupérer la structure des applications
     apps_structure = get_apps_structure()
     for app, details in apps_structure.items():
         content += f"=== Application : {app}\n\n"
@@ -116,9 +121,18 @@ Pour déployer le projet en production :
 3. Utilisez un serveur compatible WSGI, tel que Gunicorn, et configurez un proxy inverse comme Nginx pour gérer les requêtes HTTP.
 """
 
+    # Dossiers et chemins
+    docs_folder = os.path.join(base_dir, "docs")
+    adoc_folder = os.path.join(docs_folder, "adoc")
+    diagram_folder = os.path.join(docs_folder, "diagramme")
+
+    os.makedirs(adoc_folder, exist_ok=True)
+    os.makedirs(diagram_folder, exist_ok=True)
+
     # Génération de l'image PNG depuis le fichier .puml
-    puml_file = "schoolo.puml"
-    puml_image = "schoolo.png"
+    puml_file = os.path.join(diagram_folder, "schoolo.puml")
+    puml_image = os.path.join(diagram_folder, "schoolo.png")
+
     if os.path.exists(puml_file):
         # Utilisation de subprocess pour générer l'image
         try:
@@ -129,7 +143,7 @@ Pour déployer le projet en production :
 
 Diagramme des relations de modèle :
 
-image::{puml_image}[]
+image::{os.path.relpath(puml_image, adoc_folder)}[]
 """
         except subprocess.CalledProcessError:
             content += "\n\n== Diagrammes\n\nErreur lors de la génération de l'image à partir du fichier UML.\n"
@@ -137,10 +151,26 @@ image::{puml_image}[]
         content += "\n\n== Diagrammes\n\nAucun diagramme UML trouvé.\n"
 
     # Écriture dans le fichier index.adoc
-    with open("docs/index.adoc", "w") as f:
+    index_adoc_path = os.path.join(adoc_folder, "index.adoc")
+    with open(index_adoc_path, "w") as f:
         f.write(content)
     
     print("index.adoc généré avec succès.")
 
+def generate_docs():
+    docs_folder = os.path.join(base_dir, "docs")
+    adoc_folder = os.path.join(docs_folder, "adoc")
+    input_file = os.path.join(adoc_folder, "index.adoc")
+    output_html = os.path.join(adoc_folder, "docs.html")
+    output_pdf = os.path.join(docs_folder, "docs.pdf")
+
+    # Générer la documentation HTML
+    subprocess.run(["asciidoctor", "-o", output_html, input_file], check=True)
+    # Générer la documentation PDF
+    subprocess.run(["asciidoctor-pdf", "-o", output_pdf, input_file], check=True)
+
+    print("Documentation générée avec succès.")
+
 if __name__ == "__main__":
     generate_index_adoc()
+    generate_docs()

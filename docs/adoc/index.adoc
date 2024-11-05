@@ -97,4 +97,4 @@ Pour déployer le projet en production :
 
 Diagramme des relations de modèle :
 
-image::schoolo.png[]
+image::../diagramme/schoolo.png[]
