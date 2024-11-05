@@ -1,0 +1,1 @@
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=PIROSS-Dynamics_Schoolo-back&metric=code_smells&branch=develop)](https://sonarcloud.io/summary/new_code?id=PIROSS-Dynamics_Schoolo-back&branch=develop)
