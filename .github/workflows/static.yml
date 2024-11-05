@@ -39,6 +39,5 @@ jobs:
         with:
           # Remplacez par vos clés de projet et d'organisation
           args:
-            -Dsonar.projectKey=<PIROSS-Dynamics_Schoolo-back>
-            -Dsonar.organization=<piross-dynamics>
-
+            -Dsonar.projectKey=PIROSS-Dynamics_Schoolo-back
+            -Dsonar.organization=piross-dynamics
