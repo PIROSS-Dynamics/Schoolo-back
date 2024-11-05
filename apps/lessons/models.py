@@ -20,6 +20,7 @@ class Lesson(models.Model):
     )
     content = models.TextField()
     is_public = models.BooleanField(default=True)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.title
