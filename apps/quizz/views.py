@@ -18,6 +18,40 @@ class QuizzListView(APIView):
         serializer = QuizzSerializer(quizz, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+class QuizzDetailView(APIView):
+    def get(self, request, quizz_id):
+        quizz = get_object_or_404(Quizz, id=quizz_id, is_public=True)
+        serializer = QuizzSerializer(quizz)
+        return Response(serializer.data)
+
+    def post(self, request, quizz_id):
+        quizz = get_object_or_404(Quizz, id=quizz_id)
+        score = 0
+        total_questions = quizz.questions.count()
+
+        # Évaluer chaque question
+        for question in quizz.questions.all():
+            user_answer = request.data.get(str(question.id))  # Obtient la réponse de l'utilisateur pour cette question
+
+            if question.question_type == 'choice':
+                # Récupère le texte du choix sélectionné par l'utilisateur
+                selected_choice = get_object_or_404(Choice, id=user_answer)
+                if selected_choice.text == question.correct_answer:
+                    score += 1
+            else:
+                # Vérifie la réponse écrite
+                if user_answer and user_answer.strip().lower() == question.correct_answer.strip().lower():
+                    score += 1
+
+        # Calculer et retourner le score
+        return Response({
+            "score": score,
+            "total": total_questions,
+            "result": f"Vous avez {score} bonnes réponses sur {total_questions}."
+        }, status=status.HTTP_200_OK)
+
+
 #### GESTION BACK ####
 
 def quizz_list(request):

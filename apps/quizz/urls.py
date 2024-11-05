@@ -7,7 +7,7 @@ urlpatterns = [
     ## GESTION FRONT ##
     
     path('api/quizzlist/', views.QuizzListView.as_view(), name='quizz-list'),
-    
+    path('api/quizzlist/<int:quizz_id>/', views.QuizzDetailView.as_view(), name='quizz-detail'),
     ## GESTION BACK ##
     
     path('', views.quizz_list, name='quizz_list'),

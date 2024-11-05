@@ -18,4 +18,4 @@ class QuestionForm(forms.ModelForm):
 class ChoiceForm(forms.ModelForm):
     class Meta:
         model = Choice
-        fields = ['text', 'is_correct']  # Inclure le choix de réponse
+        fields = ['text']  # Inclure le choix de réponse

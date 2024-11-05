@@ -15,7 +15,7 @@ admin.site.register(Question, questionAdmin)
 
 
 class choiceAdmin(admin.ModelAdmin):
-    list_display = ('question', 'text', 'is_correct')  
+    list_display = ('question', 'text')  
 
 admin.site.register(Choice, choiceAdmin)
 
