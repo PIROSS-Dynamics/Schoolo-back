@@ -52,6 +52,55 @@ class QuizzDetailView(APIView):
         }, status=status.HTTP_200_OK)
 
 
+class CreateQuizzView(APIView):
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        
+        # On commence une transaction pour garantir l'intégrité des données en cas d'échec
+        with transaction.atomic():
+            # Récupérer les informations de base du quiz
+            title = data.get('title')
+            subject = data.get('subject')
+            teacher_id = data.get('teacher')
+            is_public = data.get('is_public', False)
+            questions_data = data.get('questions', [])
+            
+            # Créer le quiz
+            quiz = Quizz.objects.create(
+                title=title,
+                subject=subject,
+                teacher_id=teacher_id,
+                is_public=is_public,
+                number_of_questions=len(questions_data)
+            )
+
+            # Créer chaque question et ses choix (le cas échéant)
+            for question_data in questions_data:
+                question_text = question_data.get('text')
+                question_type = question_data.get('question_type')
+                correct_answer = question_data.get('correct_answer', '')
+                
+                question = Question.objects.create(
+                    quizz=quiz,
+                    text=question_text,
+                    question_type=question_type,
+                    correct_answer=correct_answer
+                )
+                
+                # Créer les choix pour les questions de type "choice"
+                if question_type == 'choice':
+                    choices_data = question_data.get('choices', [])
+                    for choice in choices_data:
+                        choice_text = choice['text'] if isinstance(choice, dict) else choice
+                        Choice.objects.create(
+                            question=question,
+                            text=choice_text
+                        )
+
+        # Sérialiser le quiz créé pour retour de confirmation
+        serializer = QuizzSerializer(quiz)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 #### GESTION BACK ####
 
 def quizz_list(request):
@@ -87,58 +136,4 @@ def quizz_detail(request, quizz_id):
         return render(request, 'quizz/result.html', {'score': score, 'total': total_questions})
 
     return render(request, 'quizz/quizz_detail.html', {'quizz': quizz})
-
-def add_quizz(request):
-    if request.method == 'POST':
-        quizz_form = QuizzForm(request.POST)
-        if quizz_form.is_valid():
-            quizz = quizz_form.save()
-            
-            # Parcourir les questions
-            for key in request.POST:
-                if key.startswith('question_') and '_text' in key:
-                    question_index = key.split('_')[1]
-                    question_text = request.POST.get(f'question_{question_index}_text')
-                    question_type = request.POST.get(f'question_{question_index}_type')
-
-                    # Créer l'objet Question
-                    question = Question.objects.create(
-                        quizz=quizz,
-                        text=question_text,
-                        question_type=question_type
-                    )
-
-                    # Si c'est une question à réponse écrite
-                    if question_type == 'text':
-                        question.correct_answer = request.POST.get(f'question_{question_index}_correct_answer')
-                        question.save()
-
-                    # Si c'est une question à choix multiple
-                    elif question_type == 'choice':
-                        choices = [v for k, v in request.POST.items() if k.startswith(f'choices_{question_index}_')]
-                        correct_choice_key = request.POST.get(f'correct_choice_{question_index}')
-
-                        # Créer les choix
-                        for i, choice_text in enumerate(choices):
-                            choice_key = f'choices_{question_index}_{i+1}'
-                            is_correct = (choice_key == correct_choice_key)
-
-                            # Création du choix avec le bon état de `is_correct`
-                            choice = Choice.objects.create(
-                                question=question,
-                                text=choice_text,
-                                is_correct=is_correct
-                            )
-
-                            # Si le choix est correct, on met à jour `correct_answer`
-                            if is_correct:
-                                question.correct_answer = choice.text
-                                question.save()  # Sauvegarde pour `correct_answer`
-            
-            return redirect('quizz_list')
-
-    else:
-        quizz_form = QuizzForm()
-    
-    return render(request, 'quizz/add_quizz.html', {'quizz_form': quizz_form})
 
