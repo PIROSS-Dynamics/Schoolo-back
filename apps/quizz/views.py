@@ -29,27 +29,43 @@ class QuizzDetailView(APIView):
         quizz = get_object_or_404(Quizz, id=quizz_id)
         score = 0
         total_questions = quizz.questions.count()
+        corrections = []  # Nouvelle liste pour stocker les corrections
 
         # Évaluer chaque question
         for question in quizz.questions.all():
             user_answer = request.data.get(str(question.id))  # Obtient la réponse de l'utilisateur pour cette question
+            is_correct = False  # Par défaut, la réponse est incorrecte
 
             if question.question_type == 'choice':
-                # Récupère le texte du choix sélectionné par l'utilisateur
+                # Récupère le choix sélectionné par l'utilisateur
                 selected_choice = get_object_or_404(Choice, id=user_answer)
                 if selected_choice.text == question.correct_answer:
                     score += 1
+                    is_correct = True
+                correct_answer = question.correct_answer  # Bonne réponse
+
             else:
                 # Vérifie la réponse écrite
                 if user_answer and user_answer.strip().lower() == question.correct_answer.strip().lower():
                     score += 1
+                    is_correct = True
+                correct_answer = question.correct_answer  # Bonne réponse
 
-        # Calculer et retourner le score
+            # Ajout des détails de correction pour chaque question
+            corrections.append({
+                "question_text": question.text,
+                "correct_answer": correct_answer,
+                "is_correct": is_correct
+            })
+
+        # Calculer et retourner le score ainsi que les corrections
         return Response({
             "score": score,
             "total": total_questions,
-            "result": f"Vous avez {score} bonnes réponses sur {total_questions}."
+            "result": f"Vous avez {score} bonnes réponses sur {total_questions}.",
+            "corrections": corrections  # Ajout des corrections dans la réponse
         }, status=status.HTTP_200_OK)
+
 
 
 class CreateQuizzView(APIView):
