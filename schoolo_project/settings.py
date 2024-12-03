@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     # Installations
     'corsheaders',
     'rest_framework',
+    'drf_yasg',
     'rest_framework.authtoken',
 ]
 

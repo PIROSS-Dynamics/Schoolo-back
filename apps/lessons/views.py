@@ -8,6 +8,8 @@ from rest_framework import status
 from .models import Lesson
 from .serializers import LessonSerializer
 from rest_framework.decorators import api_view
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 #### GESTION FRONT ####
 
@@ -35,12 +37,25 @@ class LessonDetailView(APIView):
             return Response({'error': 'Leçon non trouvée.'}, status=status.HTTP_404_NOT_FOUND)
 
 class CreateLessonView(APIView):
+    """
+    Crée une nouvelle leçon.
+    """
+
+    @swagger_auto_schema(
+        operation_description="Créer une leçon avec les données fournies.",
+        request_body=LessonSerializer,
+        responses={
+            201: openapi.Response("Leçon créée avec succès.", LessonSerializer),
+            400: "Données invalides.",
+        }
+    )
     def post(self, request, *args, **kwargs):
         serializer = LessonSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 #### GESTION BACK ####
 
