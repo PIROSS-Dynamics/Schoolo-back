@@ -1,0 +1,81 @@
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendrier Hebdomadaire</title>
+    <style>
+        .calendar-container {
+            display: grid;
+            grid-template-columns: 100px repeat(7, 1fr);
+            grid-template-rows: 50px repeat(24, 50px);
+            gap: 1px;
+            border: 1px solid #ddd;
+        }
+        .hour-label {
+            text-align: right;
+            padding-right: 10px;
+            background-color: #f5f5f5;
+            border-right: 1px solid #ddd;
+            grid-column: 1;
+        }
+        .day-header {
+            grid-row: 1;
+            background-color: #f0f8ff;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .hour-cell {
+            position: relative;
+            border-top: 1px solid #ddd;
+        }
+        .task {
+            background-color: #add8e6;
+            padding: 5px;
+            border-radius: 5px;
+            position: absolute;
+            width: 90%;
+            left: 5%;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calendrier Hebdomadaire</h1>
+    <div>
+        <a href="?week_start={{ previous_week_start }}">Semaine Précédente</a>
+        <span>{{ week_start|date:"d/m/Y" }} - {{ week_end|date:"d/m/Y" }}</span>
+        <a href="?week_start={{ next_week_start }}">Semaine Suivante</a>
+    </div>
+    
+    <div class="calendar-container">
+        <!-- Day Headers -->
+        <div></div>
+        {% for day, tasks in days_of_week.items %}
+            <div class="day-header">{{ day|date:"l, d F" }}</div>
+        {% endfor %}
+
+        {% for hour in "012345678901234567890123"|slice:"24" %}
+            <div class="hour-label">{{ hour|add:"0" }}:00</div>
+            {% for day, tasks in days_of_week.items %}
+                <div class="hour-cell">
+                    {% for task in tasks %}
+                        {% if task.start_date.hour == hour|add:"0" %}
+                            <div class="task" 
+                                style="top: {{ task.start_date|calculate_top_position }}px; 
+                                        height: {{ task.start_date|calculate_task_height:task.end_date }}px;"
+                                onclick="alert('{{ task.title }}: {{ task.description }}')">
+                                {{ task.title }}<br>
+                                {{ task.start_date|date:"d/m/Y H:i" }} - {{ task.end_date|date:"d/m/Y H:i" }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+    </div>
+</body>
+</html>
