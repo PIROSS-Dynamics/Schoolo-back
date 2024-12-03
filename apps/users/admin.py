@@ -1,29 +1,29 @@
 from django.contrib import admin
-from .models import Task, Schedule, Profile, User, Student, Teacher, Parent
+from .models import Task, User, Student, Teacher, Parent
+
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'start_date', 'end_date')
-    search_fields = ('name', 'description')
-    list_filter = ('start_date', 'end_date')
+    list_display = ('id','title','subject','student','description')
+    search_fields = ('titre', 'description')
 
-@admin.register(Schedule)
-class ScheduleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'get_tasks')
+# @admin.register(Schedule)
+# class ScheduleAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'get_tasks')
     
-    def get_tasks(self, obj):
-        return ", ".join([task.name for task in obj.tasks.all()])
-    get_tasks.short_description = 'Tasks'
+#     def get_tasks(self, obj):
+#         return ", ".join([task.name for task in obj.tasks.all()])
+#     get_tasks.short_description = 'Tasks'
 
-@admin.register(Profile)
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('id', 'photo', 'bio')
+# @admin.register(Profile)
+# class ProfileAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'photo', 'bio')
+
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'schedule', 'profile')
+    list_display = ('id',"username",'first_name', 'last_name', 'email')
     search_fields = ('first_name', 'last_name', 'email')
-    list_filter = ('schedule',)
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
@@ -44,3 +44,9 @@ class ParentAdmin(admin.ModelAdmin):
     def get_children(self, obj):
         return ", ".join([f"{child.first_name} {child.last_name}" for child in obj.children.all()])
     get_children.short_description = 'Children'
+
+
+""" 
+    integration de "photo" et "bio" directement dans user - suppression de profil
+    
+"""
