@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.utils import timezone
 
 # -- Task
 class Task(models.Model):
@@ -25,17 +27,77 @@ class Profile(models.Model):
     def __str__(self):
         return f"Profile (Photo: {self.photo}, Bio: {self.bio[:30]}...)"
 
-# -- User
-class User(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+
+
+
+# -------------------------------------------------------------------------------- 
+# -- CustomUserManager - un user manager costomisé afin de mieux la création de chaque user
+# -------------------------------------------------------------------------------- 
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, username,name, last_name,password=None):
+        if not username:
+            raise ValueError("username n'est pas donné.")
+    
+        if not email:
+            raise ValueError("email n'est pas donné.")
+        
+        user = self.model(
+            email = self.normalize_email(email),
+            username = username,
+            name = name,
+            last_name = last_name,
+        )
+        user.set_password(password)
+        user.save(using= self._db)
+
+        return user
+        
+         minutes : 17 
+    # -------------------------------------     
+    def create_superuser(self,email,username,name, password=None ):
+        self.create_user(
+            email,username,name,password
+        )
+
+
+
+
+
+
+
+# -- User - un user costomisé afin de mieux gérer les fonctonnalités
+class CustomUser(AbstractBaseUser):
+    first_name = models.CharField(max_length=50,blank=True)
+    last_name = models.CharField(max_length=50,blank=True)
+    username = models.CharField(max_length=50)
     email = models.EmailField(max_length=254)
     password = models.CharField(max_length=50)
-    schedule = models.ForeignKey(Schedule, on_delete=models.SET_NULL, null=True)
+    register_date = models.DateField(default=timezone)
+    is_active = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
 
+    USERNAME_FIELD ='email'
+    REQUIRED_FIELDS=['name',"email","username"]
+    
     def __str__(self):
         return f"User: {self.first_name} {self.last_name} (Email: {self.email})"
+
+
+    def has_perms(self,perm_list, obj=None):
+        return True
+    
+    
+    def has_module_perms(self,app_label):
+        return True
+    
+    @property
+    def is_staff(self):    # c'est un admin cet utilisateur?
+        return self.is_admin
+
+
+
 
 # -- Student
 class Student(User):
