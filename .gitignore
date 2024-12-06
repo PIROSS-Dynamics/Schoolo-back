@@ -1,8 +1,54 @@
 # Ignorer les fichiers macOS
 .DS_Store
 
+# Ignorer la base de données SQLite
 db.sqlite3
+db.sqlite3-journal
 
+# Ignorer les fichiers générés par Python
 **/__pycache__/
-
 *.pyc
+*.pyo
+*.pyd
+
+# Ignorer les environnements virtuels
+venv/
+env/
+ENV/
+.virtualenv/
+
+# Ignorer les fichiers de log
+*.log
+
+# Ignorer les fichiers d'exécution et temporaires
+*.pid
+*.swp
+*.swo
+*.~ 
+*.tmp
+
+# Ignorer les fichiers de configuration locaux (ex. : IDE)
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Ignorer les fichiers de migrations non versionnés
+**/migrations/**/000*.py
+
+# Ignorer les fichiers générés par le coverage et les tests
+.coverage
+*.cover
+coverage.xml
+nosetests.xml
+test_results/
+
+# Ignorer les fichiers statiques générés
+staticfiles/
+media/
+node_modules/
+
+# Ignorer les fichiers de distribution Python
+dist/
+build/
+*.egg-info/
