@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from os import getenv
+from urllib.parse import urlparse
+from dotenv import load_dotenv
+
+load_dotenv()  # Charger les variables d'environnement depuis .env
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -59,7 +64,10 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # URL de votre front-end React
+    "http://localhost:3000",  # URL front-end React
+    "https://ep-shy-mouse-a21povqy.eu-central-1.aws.neon.tech",  # Remplacez par votre URL Neon exacte
+    "http://127.0.0.1",  
+    "http://localhost",  
 ]
 
 ROOT_URLCONF = 'schoolo_project.urls'
@@ -88,10 +96,17 @@ WSGI_APPLICATION = 'schoolo_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+tmpPostgres = urlparse(getenv("DATABASE_URL"))
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': tmpPostgres.port or 5432,  # Par défaut, PostgreSQL utilise le port 5432
+        'OPTIONS': {'sslmode': 'require'},  # Nécessaire pour Neon
     }
 }
 

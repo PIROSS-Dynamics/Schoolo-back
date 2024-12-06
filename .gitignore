@@ -13,8 +13,6 @@ db.sqlite3-journal
 
 # Ignorer les environnements virtuels
 venv/
-env/
-ENV/
 .virtualenv/
 
 # Ignorer les fichiers de log

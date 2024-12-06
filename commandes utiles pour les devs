@@ -14,3 +14,9 @@ python manage.py migrate
 
 ## Vérifier les versions back
 pip list
+
+## GITHUB
+## Restaurer par rapport à la branche develop globale
+git checkout nom_de_la_branche_a_affecter_le_contenu_de_develop
+git fetch origin
+git reset --hard origin/develop
