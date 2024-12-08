@@ -10,12 +10,15 @@
 </head>
 <body>
     <div class="container">
+        {% include "partials/messages.html" %}
         <h1>Bienvenue sur S'cool (Backend)</h1>
         <div class="link-card">
             <a href="{% url 'quizz_list' %}">Accéder aux Quizz</a>
             <a href="{% url 'subjects_list' %}">Accéder aux Leçons</a>
             <a href="/admin/">Accéder à la page Admin</a> 
-            {% comment %} <a href="{% url 'Login_SignUp' %}">Login/SignUp test</a>  {% endcomment %}
+            <a href="{% url 'signup' %}">Inscription test</a> 
+            {% comment %} <a href="{% url 'login' %}">Login test</a>  {% endcomment %}
+            {% comment %} <a href="{% url 'Login' %}">Login/SignUp test</a>  {% endcomment %}
         </div>
     </div>
 </body>

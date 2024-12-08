@@ -1,0 +1,13 @@
+{% block title %}S'inscrire{% endblock title %}
+
+
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p}}
+        <input type="submit" value="S'inscrire" />
+    </form>
+
+{% endblock content %}
+
+

@@ -48,7 +48,15 @@ class UserChangeForm(forms.ModelForm):
 class RegisterUserForm(ModelForm):
     password = forms.CharField(label="Password",widget=forms.PasswordInput)
     password_confirmation = forms.CharField(label="Password Confirmation",widget=forms.PasswordInput)
-   
+    class Meta:
+        model = CustomUser
+        fields = ['username','email']
+        
+    def clean_password2(self):
+        pass1 = self.cleaned_data['password1']
+        pass2 = self.cleaned_data['password2']
+        if pass1 and pass2 and pass1 != pass2:
+            raise ValidationError("Les mots de passes sasies ne se correspondent pas.")
 
 
 
