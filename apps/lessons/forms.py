@@ -1,6 +1,6 @@
 # lessons/forms.py
 from django import forms
-from .models import Lesson, Teacher
+from .models import Lesson , Teacher
 
 class LessonForm(forms.ModelForm):
     class Meta:
@@ -9,4 +9,7 @@ class LessonForm(forms.ModelForm):
         widgets = {
             'teacher': forms.Select(attrs={'class': 'form-control'}),  
         }
+        
+
+
 
