@@ -54,17 +54,19 @@ class ExtractPdfTextView(APIView):
     parser_classes = [MultiPartParser]  # to manage muliplePart Files
 
     def post(self, request, *args, **kwargs):
-        
+
         pdf_file = request.FILES.get("pdf")
         if pdf_file:
-            
+ 
             try:
-                
+
                 # read the pdf and transform it to fill the content text zone
                 reader = PdfReader(pdf_file)
                 extracted_text = ""
                 for page in reader.pages:
                     extracted_text += page.extract_text()
+
+                    
                 return Response({"content": extracted_text}, status=200)
             except Exception as e:
                 return Response({"error": f"Erreur d'extraction : {str(e)}"}, status=400)
