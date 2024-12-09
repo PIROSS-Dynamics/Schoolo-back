@@ -9,6 +9,10 @@ from .models import Lesson
 from .serializers import LessonSerializer
 from rest_framework.decorators import api_view
 
+#to read the pdf
+from rest_framework.parsers import MultiPartParser
+from PyPDF2 import PdfReader
+
 #### GESTION FRONT ####
 
 class LessonListView(APIView):
@@ -35,12 +39,37 @@ class LessonDetailView(APIView):
             return Response({'error': 'Leçon non trouvée.'}, status=status.HTTP_404_NOT_FOUND)
 
 class CreateLessonView(APIView):
+    
     def post(self, request, *args, **kwargs):
+
+        
         serializer = LessonSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ExtractPdfTextView(APIView):
+    parser_classes = [MultiPartParser]  # to manage muliplePart Files
+
+    def post(self, request, *args, **kwargs):
+        
+        pdf_file = request.FILES.get("pdf")
+        if pdf_file:
+            
+            try:
+                
+                # read the pdf and transform it to fill the content text zone
+                reader = PdfReader(pdf_file)
+                extracted_text = ""
+                for page in reader.pages:
+                    extracted_text += page.extract_text()
+                return Response({"content": extracted_text}, status=200)
+            except Exception as e:
+                return Response({"error": f"Erreur d'extraction : {str(e)}"}, status=400)
+        return Response({"error": "Aucun fichier PDF fourni"}, status=400)
+
 
 #### GESTION BACK ####
 
