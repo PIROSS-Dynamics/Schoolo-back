@@ -17,6 +17,8 @@ pip list
 
 ## GITHUB
 ## Restaurer par rapport à la branche develop globale
-git checkout nom_de_la_branche_a_affecter_le_contenu_de_develop
+git checkout nom_de_sa_branche_perso
 git fetch origin
 git reset --hard origin/develop
+git push origin nom_de_sa_branche_perso --force
+
