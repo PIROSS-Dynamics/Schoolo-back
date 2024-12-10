@@ -98,6 +98,15 @@ WSGI_APPLICATION = 'schoolo_project.wsgi.application'
 
 tmpPostgres = urlparse(getenv("DATABASE_URL"))
 
+
+# Django REST Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
