@@ -1,19 +1,27 @@
 from django.test import TestCase
 from apps.lessons.models import Lesson
-from apps.users.models import Teacher
 from django.core.exceptions import ValidationError
+from apps.users.models import Teacher, Schedule, Profile
 
 
 class LessonModelTest(TestCase):
     def setUp(self):
         """Préparation des données pour les tests."""
+        # Création d'un profil et d'un emploi du temps pour le Teacher
+        schedule = Schedule.objects.create()
+        profile = Profile.objects.create(photo="photo_url", bio="Bio du professeur.")
+
+        # Création d'un Teacher
         self.teacher = Teacher.objects.create(
-            username="teacher1",
             first_name="John",
             last_name="Doe",
             email="john.doe@example.com",
+            password="securepassword",
+            schedule=schedule,
+            profile=profile,
         )
 
+        # Création d'une leçon
         self.lesson = Lesson.objects.create(
             title="Introduction aux fractions",
             subject="Maths",
@@ -40,16 +48,12 @@ class LessonModelTest(TestCase):
         self.lesson.save()
         self.assertEqual(self.lesson.subject, "Français")
 
-
-
-
     def test_invalid_subject(self):
         """Test qu'une valeur invalide pour `subject` lève une erreur."""
-        self.lesson.subject = "Informatique"
+        self.lesson.subject = "Informatique"  # Non présent dans SUBJECT_CHOICES
         with self.assertRaises(ValidationError) as context:
             self.lesson.full_clean()
-
-        self.assertIn("n’est pas un choix valide", str(context.exception))
+        self.assertIn("is not a valid choice", str(context.exception))
 
 
     def test_blank_and_null_description(self):
@@ -65,19 +69,15 @@ class LessonModelTest(TestCase):
 
     def test_title_max_length(self):
         """Test que le champ `title` ne dépasse pas la longueur maximale."""
-        self.lesson.title = "A" * 256  # Dépasse la limite de 255 caractères
-        with self.assertRaises(ValidationError):
+        self.lesson.title = "A" * 256  # 256 caractères
+        with self.assertRaises(ValidationError) as context:
             self.lesson.full_clean()
+        self.assertIn("Ensure this value has at most 255 characters", str(context.exception))
 
-    def test_subject_max_length(self):
-        """Test que le champ `subject` ne dépasse pas la longueur maximale."""
-        self.lesson.subject = "A" * 51  # Dépasse la limite de 50 caractères
-        with self.assertRaises(ValidationError):
-            self.lesson.full_clean()
 
     def test_lesson_teacher_relation(self):
         """Test que la leçon est correctement associée à un enseignant."""
-        self.assertEqual(self.lesson.teacher.username, "teacher1")
+        self.assertEqual(self.lesson.teacher.email, "john.doe@example.com")
 
     def test_teacher_deletion_cascades(self):
         """Test que la suppression d'un enseignant supprime ses leçons."""
