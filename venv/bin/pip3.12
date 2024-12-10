@@ -1,4 +1,4 @@
-#!/Users/piravine/Documents/FAC/Schoolo/Schoolo-back/venv/bin/python3.12
+#!/Users/romain/Documents/FAC/Master-1/S1/Devops/Schoolo-back/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
