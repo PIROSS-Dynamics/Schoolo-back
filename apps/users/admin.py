@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Task, Schedule, Profile, User, Student, Teacher, Parent
+from .models import Task, Schedule, User, Student, Teacher, Parent
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
@@ -15,13 +15,10 @@ class ScheduleAdmin(admin.ModelAdmin):
         return ", ".join([task.name for task in obj.tasks.all()])
     get_tasks.short_description = 'Tasks'
 
-@admin.register(Profile)
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('id', 'photo', 'bio')
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'schedule', 'profile')
+    list_display = ('first_name', 'last_name', 'email', 'schedule')
     search_fields = ('first_name', 'last_name', 'email')
     list_filter = ('schedule',)
 

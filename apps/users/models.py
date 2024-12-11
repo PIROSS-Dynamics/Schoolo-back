@@ -17,13 +17,6 @@ class Schedule(models.Model):
     def __str__(self):
         return f"Schedule with {self.tasks.count()} task(s)"
 
-# -- Profile
-class Profile(models.Model):
-    photo = models.CharField(max_length=200)
-    bio = models.TextField()
-
-    def __str__(self):
-        return f"Profile (Photo: {self.photo}, Bio: {self.bio[:30]}...)"
 
 # -- User
 class User(models.Model):
@@ -32,8 +25,8 @@ class User(models.Model):
     email = models.EmailField(max_length=254)
     password = models.CharField(max_length=50)
     schedule = models.ForeignKey(Schedule, on_delete=models.SET_NULL, null=True)
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
 
+    
     def __str__(self):
         return f"User: {self.first_name} {self.last_name} (Email: {self.email})"
 
