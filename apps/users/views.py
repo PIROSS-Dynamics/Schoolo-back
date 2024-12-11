@@ -17,12 +17,6 @@ class RegisterView(APIView):
         data = request.data
         role = data.get('role', 'student')
         
-        # Vérification des champs requis
-        required_fields = ['first_name', 'last_name', 'email', 'password']
-        for field in required_fields:
-            if not data.get(field):
-                return Response({'error': f'{field} is required'}, status=status.HTTP_400_BAD_REQUEST)
-
         if User.objects.filter(email=data['email']).exists():
             return Response({'error': 'Email is already taken'}, status=status.HTTP_400_BAD_REQUEST)
 
