@@ -30,7 +30,8 @@ class RegisterView(APIView):
                     email=data['email'],
                     password=data['password'],  # Hash password
                     schedule=None,
-                    experience_level=0
+                    experience_level=0,
+                    role=role
                 )
                 print("test 2")
             elif role == 'teacher':
@@ -39,6 +40,7 @@ class RegisterView(APIView):
                     last_name=data['last_name'],
                     email=data['email'],
                     password=data['password'],
+                    role=role
                 )
             elif role == 'parent':
                 user = Parent.objects.create(
@@ -46,6 +48,7 @@ class RegisterView(APIView):
                     last_name=data['last_name'],
                     email=data['email'],
                     password=data['password'],
+                    role=role
                 )
             else:
                 return Response({'error': 'Invalid role'}, status=status.HTTP_400_BAD_REQUEST)
@@ -79,7 +82,7 @@ class LoginView(APIView):
                 return Response({
                     'access': token,
                     'first_name': user.first_name,
-                    'role': user.__class__.__name__.lower()  # Rôle basé sur la classe (student, teacher, parent)
+                    'role': user.role
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)

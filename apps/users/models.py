@@ -20,11 +20,19 @@ class Schedule(models.Model):
 
 # -- User
 class User(models.Model):
+    ROLE_CHOICES = [
+        ('student', 'Étudiant'),
+        ('teacher', 'Professeur'),
+        ('parent', 'Parent'),
+        ('admin', 'Administrateur'),  # Ajout d'un rôle administrateur par exemple
+    ]
+    
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=254)
     password = models.CharField(max_length=50)
     schedule = models.ForeignKey(Schedule, on_delete=models.SET_NULL, null=True)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='student') 
 
     
     def __str__(self):
