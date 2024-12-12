@@ -82,7 +82,8 @@ class LoginView(APIView):
                 return Response({
                     'access': token,
                     'first_name': user.first_name,
-                    'role': user.role
+                    'role': user.role,
+                    'id': user.id
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -97,4 +98,13 @@ def list_teachers(request):
     teachers = Teacher.objects.all()
     serializer = TeacherSerializer(teachers, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def get_teacher(request, id):
+    try:
+        teacher = Teacher.objects.get(id=id)
+        serializer = TeacherSerializer(teacher)
+        return Response(serializer.data)
+    except Teacher.DoesNotExist:
+        return Response({'error': 'Teacher not found'}, status=404)
 

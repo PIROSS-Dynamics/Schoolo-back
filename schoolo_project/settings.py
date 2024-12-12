@@ -65,9 +65,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # URL front-end React
-    "https://ep-shy-mouse-a21povqy.eu-central-1.aws.neon.tech",  # Data Base
-    "http://127.0.0.1",  
-    "http://localhost",  
+    "https://ep-shy-mouse-a21povqy.eu-central-1.aws.neon.tech",  # Data Base 
 ]
 
 ROOT_URLCONF = 'schoolo_project.urls'
