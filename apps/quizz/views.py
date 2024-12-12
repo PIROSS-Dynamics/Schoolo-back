@@ -1,14 +1,12 @@
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
 from .models import Quizz, Question, Choice
-from .forms import QuizzForm, QuestionForm, ChoiceForm
-from django.forms import formset_factory
 from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import QuizzSerializer
+from rest_framework.decorators import api_view
 
 #### GESTION FRONT ####
 
@@ -116,6 +114,14 @@ class CreateQuizzView(APIView):
         # Sérialiser le quiz créé pour retour de confirmation
         serializer = QuizzSerializer(quiz)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+def get_teacher_quizzes(request, teacher_id):
+    #Get Quizz created by a specific teacher
+    quizzes = Quizz.objects.filter(teacher_id=teacher_id)
+    serializer = QuizzSerializer(quizzes, many=True)  
+    return Response(serializer.data)
 
 #### GESTION BACK ####
 

@@ -72,6 +72,12 @@ class ExtractPdfTextView(APIView):
                 return Response({"error": f"Erreur d'extraction : {str(e)}"}, status=400)
         return Response({"error": "Aucun fichier PDF fourni"}, status=400)
 
+@api_view(['GET'])
+def get_teacher_lessons(request, teacher_id):
+    #Get lessons created by a specific teacher
+    lessons = Lesson.objects.filter(teacher_id=teacher_id)
+    serializer = LessonSerializer(lessons, many=True)  
+    return Response(serializer.data)
 
 #### GESTION BACK ####
 
