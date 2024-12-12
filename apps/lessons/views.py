@@ -76,7 +76,7 @@ class ExtractPdfTextView(APIView):
 #### GESTION BACK ####
 
 def subjects_list(request):
-    subjects = ["Maths", "Français", "Histoire", "Anglais"]
+    subjects = ["Maths", "Français", "Histoire", "Anglais", "Art"]
     return render(request, 'lessons/subjects_list.html', {'subjects': subjects})
 
 def lessons_list(request):
