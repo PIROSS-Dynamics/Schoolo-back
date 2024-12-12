@@ -18,9 +18,8 @@ class RegisterView(APIView):
         role = data.get('role', 'student')
         
         if User.objects.filter(email=data['email']).exists():
-            return Response({'error': 'Email is already taken'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Un utilisateur existe déjà avec cet email'}, status=status.HTTP_400_BAD_REQUEST)
 
-        print("a")
         # Create a user in dependance of the role choosed
         try:
             if role == 'student':   
@@ -28,12 +27,11 @@ class RegisterView(APIView):
                     first_name=data['first_name'],
                     last_name=data['last_name'],
                     email=data['email'],
-                    password=data['password'],  # Hash password
+                    password=data['password'],  
                     schedule=None,
                     experience_level=0,
                     role=role
                 )
-                print("test 2")
             elif role == 'teacher':
                 user = Teacher.objects.create(
                     first_name=data['first_name'],
@@ -51,9 +49,9 @@ class RegisterView(APIView):
                     role=role
                 )
             else:
-                return Response({'error': 'Invalid role'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': 'Ce rôle est invalide'}, status=status.HTTP_400_BAD_REQUEST)
 
-            return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+            return Response({'message': 'Utilisateur crée avec succès'}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -86,9 +84,9 @@ class LoginView(APIView):
                     'id': user.id
                 }, status=status.HTTP_200_OK)
             else:
-                return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'error': 'Le mot de passe ne correspond pas'}, status=status.HTTP_401_UNAUTHORIZED)
         except User.DoesNotExist:
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': "Il n'y a aucun utilisateur existant avec cet email"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
