@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from .models import User, Student, Teacher, Parent
-from .serializers import TeacherSerializer  
+from .serializers import TeacherSerializer, StudentSerializer, ParentSerializer
 from rest_framework.decorators import api_view
 import jwt # for token
 from datetime import datetime, timedelta
@@ -107,4 +107,24 @@ def get_teacher(request, id):
         return Response(serializer.data)
     except Teacher.DoesNotExist:
         return Response({'error': 'Teacher not found'}, status=404)
+    
+    
+@api_view(['GET'])
+def get_parent(request, id):
+    try:
+        parent = Parent.objects.get(id=id)
+        serializer = ParentSerializer(parent)
+        return Response(serializer.data)
+    except Parent.DoesNotExist:
+        return Response({'error': 'Parent not found'}, status=404)
+    
+    
+@api_view(['GET'])
+def get_student(request, id):
+    try:
+        student = Student.objects.get(id=id)
+        serializer = StudentSerializer(student)
+        return Response(serializer.data)
+    except Student.DoesNotExist:
+        return Response({'error': 'Student not found'}, status=404)
 
