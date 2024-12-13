@@ -18,7 +18,7 @@ from PyPDF2 import PdfReader
 class LessonListView(APIView):
     def get(self, request, subject=None):
         if subject:
-            # Vérifie que le sujet est valide
+            # if subject is valid
             if subject.capitalize() in dict(Lesson.SUBJECT_CHOICES).keys():
                 lessons = Lesson.objects.filter(is_public=True, subject=subject.capitalize())
             else:
@@ -30,6 +30,8 @@ class LessonListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class LessonDetailView(APIView):
+
+    # for showing lesson detail
     def get(self, request, lesson_id):
         try:
             lesson = Lesson.objects.get(id=lesson_id)
@@ -38,6 +40,7 @@ class LessonDetailView(APIView):
         except Lesson.DoesNotExist:
             return Response({'error': 'Leçon non trouvée.'}, status=status.HTTP_404_NOT_FOUND)     
 
+    # for modifing lesson detail
     def put(self, request, lesson_id):
         try:
             lesson = Lesson.objects.get(id=lesson_id)
