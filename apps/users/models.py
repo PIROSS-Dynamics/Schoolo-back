@@ -1,22 +1,5 @@
 from django.db import models
 
-# -- Task
-class Task(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(blank=True, null=True)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-
-    def __str__(self):
-        return f"Task: {self.name} (Start: {self.start_date}, End: {self.end_date})"
-
-# -- Schedule
-class Schedule(models.Model):
-    tasks = models.ManyToManyField(Task)
-
-    def __str__(self):
-        return f"Schedule with {self.tasks.count()} task(s)"
-
 
 # -- User
 class User(models.Model):
@@ -31,7 +14,6 @@ class User(models.Model):
     last_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=254)
     password = models.CharField(max_length=50)
-    schedule = models.ForeignKey(Schedule, on_delete=models.SET_NULL, null=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='student') 
 
     

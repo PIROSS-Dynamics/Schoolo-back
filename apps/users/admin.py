@@ -1,26 +1,12 @@
 from django.contrib import admin
-from .models import Task, Schedule, User, Student, Teacher, Parent
+from .models import User, Student, Teacher, Parent
 
-@admin.register(Task)
-class TaskAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'start_date', 'end_date')
-    search_fields = ('name', 'description')
-    list_filter = ('start_date', 'end_date')
-
-@admin.register(Schedule)
-class ScheduleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'get_tasks')
-    
-    def get_tasks(self, obj):
-        return ", ".join([task.name for task in obj.tasks.all()])
-    get_tasks.short_description = 'Tasks'
 
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'schedule')
+    list_display = ('first_name', 'last_name', 'email')
     search_fields = ('first_name', 'last_name', 'email')
-    list_filter = ('schedule',)
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
