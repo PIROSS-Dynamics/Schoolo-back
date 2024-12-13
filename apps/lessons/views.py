@@ -36,7 +36,21 @@ class LessonDetailView(APIView):
             serializer = LessonSerializer(lesson)  
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Lesson.DoesNotExist:
+            return Response({'error': 'Leçon non trouvée.'}, status=status.HTTP_404_NOT_FOUND)     
+
+    def put(self, request, lesson_id):
+        try:
+            lesson = Lesson.objects.get(id=lesson_id)
+        except Lesson.DoesNotExist:
             return Response({'error': 'Leçon non trouvée.'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = LessonSerializer(lesson, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class CreateLessonView(APIView):
     
