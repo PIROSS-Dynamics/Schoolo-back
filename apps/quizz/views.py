@@ -5,7 +5,7 @@ from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import QuizzSerializer
+from .serializers import QuizzSerializer, QuestionSerializer, ChoiceSerializer
 from rest_framework.decorators import api_view
 
 #### GESTION FRONT ####
@@ -63,6 +63,34 @@ class QuizzDetailView(APIView):
             "result": f"Vous avez {score} bonnes réponses sur {total_questions}.",
             "corrections": corrections  # Ajout des corrections dans la réponse
         }, status=status.HTTP_200_OK)
+        
+    def put(self, request, quizz_id):
+        quizz = Quizz.objects.get(id=quizz_id)
+        
+        # Sérialiseur pour le quiz
+        quizz_serializer = QuizzSerializer(quizz, data=request.data, partial=True)
+        
+        if quizz_serializer.is_valid():
+            quizz_serializer.save()
+
+            # Mise à jour des questions et des choix
+            for question_data in request.data.get('questions', []):
+                question = Question.objects.get(id=question_data['id'], quizz=quizz)
+                question_serializer = QuestionSerializer(question, data=question_data, partial=True)
+                if question_serializer.is_valid():
+                    question_serializer.save()
+
+                    # Mise à jour des choix
+                    for choice_data in question_data.get('choices', []):
+                        choice = Choice.objects.get(id=choice_data['id'], question=question)
+                        choice_serializer = ChoiceSerializer(choice, data=choice_data, partial=True)
+                        if choice_serializer.is_valid():
+                            choice_serializer.save()
+
+            return Response({'message': 'Quiz mis à jour avec succès'}, status=status.HTTP_200_OK)
+        else:
+            return Response(quizz_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 
