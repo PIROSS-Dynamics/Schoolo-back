@@ -9,12 +9,16 @@ from .models import Lesson
 from .serializers import LessonSerializer
 from rest_framework.decorators import api_view
 
+#to read the pdf
+from rest_framework.parsers import MultiPartParser
+from PyPDF2 import PdfReader
+
 #### GESTION FRONT ####
 
 class LessonListView(APIView):
     def get(self, request, subject=None):
         if subject:
-            # Vérifie que le sujet est valide
+            # if subject is valid
             if subject.capitalize() in dict(Lesson.SUBJECT_CHOICES).keys():
                 lessons = Lesson.objects.filter(is_public=True, subject=subject.capitalize())
             else:
@@ -26,26 +30,76 @@ class LessonListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class LessonDetailView(APIView):
+
+    # for showing lesson detail
     def get(self, request, lesson_id):
         try:
             lesson = Lesson.objects.get(id=lesson_id)
             serializer = LessonSerializer(lesson)  
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Lesson.DoesNotExist:
+            return Response({'error': 'Leçon non trouvée.'}, status=status.HTTP_404_NOT_FOUND)     
+
+    # for modifing lesson detail
+    def put(self, request, lesson_id):
+        try:
+            lesson = Lesson.objects.get(id=lesson_id)
+        except Lesson.DoesNotExist:
             return Response({'error': 'Leçon non trouvée.'}, status=status.HTTP_404_NOT_FOUND)
 
+        serializer = LessonSerializer(lesson, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class CreateLessonView(APIView):
+    
     def post(self, request, *args, **kwargs):
+
+        
         serializer = LessonSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class ExtractPdfTextView(APIView):
+    parser_classes = [MultiPartParser]  # to manage muliplePart Files
+
+    def post(self, request, *args, **kwargs):
+
+        pdf_file = request.FILES.get("pdf")
+        if pdf_file:
+ 
+            try:
+
+                # read the pdf and transform it to fill the content text zone
+                reader = PdfReader(pdf_file)
+                extracted_text = ""
+                for page in reader.pages:
+                    extracted_text += page.extract_text()
+
+                    
+                return Response({"content": extracted_text}, status=200)
+            except Exception as e:
+                return Response({"error": f"Erreur d'extraction : {str(e)}"}, status=400)
+        return Response({"error": "Aucun fichier PDF fourni"}, status=400)
+
+@api_view(['GET'])
+def get_teacher_lessons(request, teacher_id):
+    #Get lessons created by a specific teacher
+    lessons = Lesson.objects.filter(teacher_id=teacher_id)
+    serializer = LessonSerializer(lessons, many=True)  
+    return Response(serializer.data)
+
 #### GESTION BACK ####
 
 def subjects_list(request):
-    subjects = ["Maths", "Français", "Histoire", "Anglais"]
+    subjects = ["Maths", "Français", "Histoire", "Anglais", "Art"]
     return render(request, 'lessons/subjects_list.html', {'subjects': subjects})
 
 def lessons_list(request):

@@ -20,7 +20,9 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 class QuizzSerializer(serializers.ModelSerializer):
     teacher_name = serializers.CharField(source='teacher.get_full_name', read_only=True)
+    teacher_id = serializers.IntegerField(source='teacher.id', read_only=True)  
     questions = QuestionSerializer(many=True, read_only=True)
+
     class Meta:
         model = Quizz
-        fields = ['id', 'title', 'subject', 'teacher_name', 'number_of_questions', 'questions']
+        fields = ['id', 'title', 'subject', 'teacher_name', 'teacher_id', 'number_of_questions', 'questions']

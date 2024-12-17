@@ -1,0 +1,24 @@
+## Commandes pour installer les dépendances du front puis le lancer
+npm install
+npm start
+
+## Commandes pour installer les dépendances du back puis le lancer
+pip install -r requirements.txt
+python manage.py runserver   
+
+## Créer un super user (admin)
+python manage.py createsuperuser
+
+## Faire les migrations des tables
+python manage.py migrate
+
+## Vérifier les versions back
+pip list
+
+## GITHUB
+## Restaurer par rapport à la branche develop globale
+git checkout nom_de_sa_branche_perso
+git fetch origin
+git reset --hard origin/develop
+git push origin nom_de_sa_branche_perso --force
+

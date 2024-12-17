@@ -9,6 +9,7 @@ class Lesson(models.Model):
         ('Français', 'Français'),
         ('Anglais', 'Anglais'),
         ('Histoire', 'Histoire'),
+        ('Art', 'Art'),
     ]
 
     title = models.CharField(max_length=255)
