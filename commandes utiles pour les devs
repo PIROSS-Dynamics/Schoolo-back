@@ -22,3 +22,14 @@ git fetch origin
 git reset --hard origin/develop
 git push origin nom_de_sa_branche_perso --force
 
+## Commandes de tests
+
+lessons:
+python manage.py test apps.lessons.tests
+
+quizz:
+python manage.py test apps.quizz.tests
+
+users:
+python manage.py test apps.users.tests
+
