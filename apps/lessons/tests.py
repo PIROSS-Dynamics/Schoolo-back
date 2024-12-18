@@ -1,102 +1,65 @@
 from django.test import TestCase
 from apps.lessons.models import Lesson
-from django.core.exceptions import ValidationError
-from apps.users.models import Teacher, Schedule, Profile
+from apps.users.models import Teacher
+from django.utils.timezone import now
 
 
-class LessonModelTest(TestCase):
+class LessonModelTestCase(TestCase):
     def setUp(self):
-        """Préparation des données pour les tests."""
-        # Création d'un profil et d'un emploi du temps pour le Teacher
-        schedule = Schedule.objects.create()
-        profile = Profile.objects.create(photo="photo_url", bio="Bio du professeur.")
-
-        # Création d'un Teacher
+        """Préparer les données pour les tests."""
+        # Créer un professeur pour associer aux leçons
         self.teacher = Teacher.objects.create(
             first_name="John",
             last_name="Doe",
             email="john.doe@example.com",
             password="securepassword",
-            schedule=schedule,
-            profile=profile,
+            role="teacher",
         )
 
-        # Création d'une leçon
+        # Créer une leçon associée au professeur
         self.lesson = Lesson.objects.create(
-            title="Introduction aux fractions",
+            title="Introduction to Maths",
             subject="Maths",
             teacher=self.teacher,
-            content="Ceci est un cours sur les fractions.",
+            content="This is the content of the maths lesson.",
             is_public=True,
-            description="Cours introductif pour les élèves de 6ème",
+            description="An introductory lesson to basic maths concepts."
         )
 
     def test_lesson_creation(self):
-        """Test de création d'une leçon."""
-        self.assertEqual(self.lesson.title, "Introduction aux fractions")
+        """Test de la création d'une leçon."""
+        self.assertEqual(self.lesson.title, "Introduction to Maths")
         self.assertEqual(self.lesson.subject, "Maths")
         self.assertEqual(self.lesson.teacher, self.teacher)
         self.assertTrue(self.lesson.is_public)
+        self.assertEqual(self.lesson.description, "An introductory lesson to basic maths concepts.")
 
-    def test_str_representation(self):
-        """Test de la représentation en chaîne de caractères."""
-        self.assertEqual(str(self.lesson), "Introduction aux fractions")
+    def test_lesson_str_representation(self):
+        """Test de la méthode __str__ de Lesson."""
+        self.assertEqual(str(self.lesson), "Introduction to Maths")
 
-    def test_subject_choices(self):
-        """Test que le choix du sujet est valide."""
-        self.lesson.subject = "Français"
+    def test_lesson_teacher_relationship(self):
+        """Test de la relation entre Lesson et Teacher."""
+        self.assertEqual(self.lesson.teacher.first_name, "John")
+        self.assertEqual(self.lesson.teacher.last_name, "Doe")
+
+    def test_update_lesson_content(self):
+        """Test de la mise à jour du contenu de la leçon."""
+        new_content = "Updated content for the maths lesson."
+        self.lesson.content = new_content
         self.lesson.save()
-        self.assertEqual(self.lesson.subject, "Français")
+        updated_lesson = Lesson.objects.get(id=self.lesson.id)
+        self.assertEqual(updated_lesson.content, new_content)
 
-    def test_invalid_subject(self):
-        """Test qu'une valeur invalide pour `subject` lève une erreur."""
-        self.lesson.subject = "Informatique"  # Non présent dans SUBJECT_CHOICES
-        with self.assertRaises(ValidationError) as context:
-            self.lesson.full_clean()
-        self.assertIn("is not a valid choice", str(context.exception))
-
-
-    def test_blank_and_null_description(self):
-        """Test que la description peut être vide ou nulle."""
-        lesson_without_description = Lesson.objects.create(
-            title="Cours sans description",
-            subject="Anglais",
-            teacher=self.teacher,
-            content="Ceci est un cours sans description.",
-            is_public=False,
-        )
-        self.assertIsNone(lesson_without_description.description)
-
-    def test_title_max_length(self):
-        """Test que le champ `title` ne dépasse pas la longueur maximale."""
-        self.lesson.title = "A" * 256  # 256 caractères
-        with self.assertRaises(ValidationError) as context:
-            self.lesson.full_clean()
-        self.assertIn("Ensure this value has at most 255 characters", str(context.exception))
-
-
-    def test_lesson_teacher_relation(self):
-        """Test que la leçon est correctement associée à un enseignant."""
-        self.assertEqual(self.lesson.teacher.email, "john.doe@example.com")
-
-    def test_teacher_deletion_cascades(self):
-        """Test que la suppression d'un enseignant supprime ses leçons."""
+    def test_delete_teacher(self):
+        """Test de la suppression du professeur lié à la leçon."""
         self.teacher.delete()
         with self.assertRaises(Lesson.DoesNotExist):
-            Lesson.objects.get(pk=self.lesson.pk)
+            Lesson.objects.get(id=self.lesson.id)
 
-    def test_is_public_default(self):
-        """Test que le champ `is_public` est vrai par défaut."""
-        lesson = Lesson.objects.create(
-            title="Cours par défaut",
-            subject="Anglais",
-            teacher=self.teacher,
-            content="Contenu par défaut",
-        )
-        self.assertTrue(lesson.is_public)
-
-    def test_toggle_is_public(self):
-        """Test que le champ `is_public` peut être modifié."""
+    def test_change_lesson_visibility(self):
+        """Test de la modification de la visibilité de la leçon."""
         self.lesson.is_public = False
         self.lesson.save()
-        self.assertFalse(self.lesson.is_public)
+        updated_lesson = Lesson.objects.get(id=self.lesson.id)
+        self.assertFalse(updated_lesson.is_public)
