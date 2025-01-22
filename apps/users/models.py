@@ -48,3 +48,16 @@ class Parent(User):
     def __str__(self):
         children_list = ", ".join([f"{child.first_name} {child.last_name}" for child in self.children.all()])
         return f"Parent: {self.first_name} {self.last_name} - Children: {children_list or 'None'}"
+
+
+# -- Task
+# class Task(models.Model):
+#     title = models.CharField(max_length=50)
+#     start_at = models.DateTimeField()
+#     ends_at = models.DateTimeField()
+#     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+#     concerned_people = models.ManyToManyField(User)  # Removed on_delete here, as ManyToMany doesn't require it
+#     lesson = models.ForeignKey('lessons.Lesson', related_name='tasks', on_delete=models.CASCADE)  # Added on_delete for ForeignKey
+
+#     def __str__(self):
+#         return f"Task: {self.title} (Created by {self.created_by.first_name} {self.created_by.last_name})"
