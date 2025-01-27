@@ -90,6 +90,17 @@ class QuizzDetailView(APIView):
             return Response({'message': 'Quiz mis à jour avec succès'}, status=status.HTTP_200_OK)
         else:
             return Response(quizz_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request, quizz_id):
+        try:
+            quizz = Quizz.objects.get(id=quizz_id)
+
+            quizz.delete()
+
+            return Response({'message': 'Quiz supprimé avec succès.'}, status=status.HTTP_204_NO_CONTENT)
+
+        except Quizz.DoesNotExist:
+            return Response({'error': 'Quiz non trouvé.'}, status=status.HTTP_404_NOT_FOUND)    
 
 
 
