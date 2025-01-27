@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "apps.lessons",
     "apps.quizz",
     "apps.users",
+    "apps.stats",
     # Applications par défaut
     'django.contrib.admin',
     'django.contrib.auth',

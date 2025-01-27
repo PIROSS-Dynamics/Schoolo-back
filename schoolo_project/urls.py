@@ -13,4 +13,5 @@ urlpatterns = [
     path('lessons/', include('apps.lessons.urls')),
     path('quizz/', include('apps.quizz.urls')),
     path('users/', include('apps.users.urls')),
+    path('stats/', include('apps.stats.urls')),
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
