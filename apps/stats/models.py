@@ -3,7 +3,8 @@ from apps.users.models import User
 from apps.quizz.models import Quizz
 
 class QuizzResult(models.Model):
-    score = models.FloatField()  
+    score = models.FloatField() 
+    total = models.FloatField()  
     date = models.DateTimeField(auto_now_add=True)  
 
     user = models.ForeignKey(

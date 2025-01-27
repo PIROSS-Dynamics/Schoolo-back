@@ -28,13 +28,35 @@ class QuizzResultsView(APIView):
         score = request.data.get('score')
         if score is None:
             return Response({"error": "Score is required."}, status=400)
+        
+        total = request.data.get('total')
+        if total is None:
+            return Response({"error": "Total is required."}, status=400)
 
         # Créer le résultat avec l'utilisateur récupéré
         result = QuizzResult.objects.create(
             user=user,
             quizz=quizz,
             score=score,
+            total=total,
             date=now(),
         )
 
         return Response({"message": "Résultat enregistré", "result_id": result.id})
+    
+class UserQuizzResultsView(APIView):
+    def get(self, request, user_id):
+        # Récupérer les résultats de quiz associés à cet utilisateur
+        try:
+            results = QuizzResult.objects.filter(user_id=user_id)
+            results_data = []
+            for result in results:
+                results_data.append({
+                    'quizz_title': result.quizz.title,
+                    'score': result.score,
+                    'total': result.total,
+                    'date': result.date,
+                })
+            return Response(results_data)
+        except QuizzResult.DoesNotExist:
+            return Response({"error": "No quiz results found for this user."}, status=404)
