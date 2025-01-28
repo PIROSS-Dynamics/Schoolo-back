@@ -92,6 +92,7 @@ class QuizzDetailView(APIView):
             return Response(quizz_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
     def delete(self, request, quizz_id):
+        
         try:
             quizz = Quizz.objects.get(id=quizz_id)
 

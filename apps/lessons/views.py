@@ -54,12 +54,14 @@ class LessonDetailView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request, lesson_id):
+        print("hello")
+        return Response({'message': 'Quiz supprimé avec succès.'}, status=status.HTTP_204_NO_CONTENT)
 
 class CreateLessonView(APIView):
     
     def post(self, request, *args, **kwargs):
 
-        
         serializer = LessonSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
