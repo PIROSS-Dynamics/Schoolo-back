@@ -15,10 +15,11 @@ class Lesson(models.Model):
     title = models.CharField(max_length=255)
     subject = models.CharField(max_length=50, choices=SUBJECT_CHOICES)  # Utiliser les choix
     teacher = models.ForeignKey(
-        Teacher,
-        on_delete=models.CASCADE,
-        related_name='lessons_created'  
-    )
+        Teacher, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True)
+    
     content = models.TextField()
     is_public = models.BooleanField(default=True)
     description = models.TextField(blank=True, null=True)

@@ -29,11 +29,6 @@ class Student(User):
 
 # -- Teacher
 class Teacher(User):
-    lessons = models.ManyToManyField(
-        'lessons.Lesson',
-        blank=True,
-        related_name='teachers'  # Changez le nom ici si nécessaire
-    )
 
     def __str__(self):
         return f"Teacher: {self.first_name} {self.last_name}"

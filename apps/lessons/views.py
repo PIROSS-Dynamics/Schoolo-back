@@ -1,11 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Lesson
 from .forms import LessonForm
-from apps.users.models import Teacher
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Lesson
+from .models import Lesson, Teacher
 from .serializers import LessonSerializer
 from rest_framework.decorators import api_view
 
@@ -55,8 +53,15 @@ class LessonDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, lesson_id):
-        print("hello")
-        return Response({'message': 'Quiz supprimé avec succès.'}, status=status.HTTP_204_NO_CONTENT)
+        try:
+            lesson = Lesson.objects.get(id=lesson_id)
+
+            lesson.delete()
+
+            return Response({'message': 'Leçon supprimé avec succès.'}, status=status.HTTP_204_NO_CONTENT)
+
+        except Lesson.DoesNotExist:
+            return Response({'error': 'Leçon non trouvé.'}, status=status.HTTP_404_NOT_FOUND)  
 
 class CreateLessonView(APIView):
     
