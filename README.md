@@ -15,6 +15,11 @@
 [![Build Status](https://github.com/PIROSS-Dynamics/Schoolo-back/actions/workflows/backend_build.yml/badge.svg)](https://github.com/PIROSS-Dynamics/Schoolo-back/actions)
 
 
+🔗 **Lien vers le répertoire Schoolo front:** 
+[![Frontend React](https://img.shields.io/badge/Frontend-React-blue?style=for-the-badge&logo=react)](https://github.com/PIROSS-Dynamics/Schoolo-front)
+
+
+
 Lancer le projet :
 
 ### Prérequis
