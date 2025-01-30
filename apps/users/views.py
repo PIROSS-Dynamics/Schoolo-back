@@ -28,7 +28,6 @@ class RegisterView(APIView):
                     last_name=data['last_name'],
                     email=data['email'],
                     password=data['password'],  
-                    schedule=None,
                     experience_level=0,
                     role=role
                 )
