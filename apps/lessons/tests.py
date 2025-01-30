@@ -83,3 +83,95 @@ class LessonModelTestCase(TestCase):
         self.lesson.delete()
         with self.assertRaises(Lesson.DoesNotExist):
             Lesson.objects.get(id=lesson_id)
+
+from rest_framework.test import APITestCase
+from rest_framework import status
+from django.urls import reverse
+from apps.lessons.models import Lesson
+from apps.users.models import Teacher
+
+class LessonViewsTestCase(APITestCase):
+
+    def setUp(self):
+        """Préparer les données de test"""
+        self.teacher = Teacher.objects.create(
+            first_name="John",
+            last_name="Doe",
+            email="john.doe@example.com",
+            password="securepassword",
+            role="teacher"
+        )
+
+        self.lesson = Lesson.objects.create(
+            title="Introduction to Maths",
+            subject="Maths",
+            teacher=self.teacher,
+            content="This is a basic maths lesson.",
+            is_public=True,
+            description="A lesson about basic math concepts."
+        )
+
+    def test_get_public_lessons(self):
+        """Test pour récupérer toutes les leçons publiques"""
+        url = reverse('lesson-list')  # ✅ Correspond à `/api/lessonslist/`
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['title'], self.lesson.title)
+
+    def test_get_lesson_detail(self):
+        """Test pour récupérer le détail d’une leçon"""
+        url = reverse('lesson-detail', args=[self.lesson.id])  # ✅ `/api/lessonslist/detail/<id>/`
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], self.lesson.title)
+
+    def test_create_lesson(self):
+        """Test pour créer une nouvelle leçon"""
+        url = reverse('create-lesson')  # ✅ `/api/lessonslist/add`
+        data = {
+            "title": "New Maths Lesson",
+            "subject": "Maths",
+            "teacher": self.teacher.id,
+            "content": "This is an advanced maths lesson.",
+            "is_public": True,
+            "description": "Advanced mathematical concepts."
+        }
+        response = self.client.post(url, data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Lesson.objects.count(), 2)
+
+    def test_update_lesson(self):
+        """Test pour modifier une leçon"""
+        url = reverse('lesson-detail', args=[self.lesson.id])  # ✅ `/api/lessonslist/detail/<id>/`
+        data = {
+            "title": "Updated Maths Lesson",
+            "subject": "Maths",
+            "content": "Updated content for maths.",
+        }
+        response = self.client.put(url, data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.lesson.refresh_from_db()
+        self.assertEqual(self.lesson.title, "Updated Maths Lesson")
+
+    def test_delete_lesson(self):
+        """Test pour supprimer une leçon"""
+        url = reverse('lesson-detail', args=[self.lesson.id])  # ✅ `/api/lessonslist/detail/<id>/`
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Lesson.objects.count(), 0)
+
+    def test_get_teacher_lessons(self):
+        """Test pour récupérer les leçons d’un enseignant spécifique"""
+        url = reverse('get-teacher-lessons', args=[self.teacher.id])  # ✅ `/api/teacher/<teacher_id>/lessons/`
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['title'], self.lesson.title)
+
