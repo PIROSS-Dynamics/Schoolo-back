@@ -449,8 +449,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_structure_des_applications">Structure des Applications</a>
 <ul class="sectlevel2">
 <li><a href="#_application_quizz">Application : quizz</a></li>
+<li><a href="#_application_activity">Application : activity</a></li>
 <li><a href="#_application_users">Application : users</a></li>
 <li><a href="#_application_lessons">Application : lessons</a></li>
+<li><a href="#_application_stats">Application : stats</a></li>
 </ul>
 </li>
 <li><a href="#_déploiement">Déploiement</a></li>
@@ -501,6 +503,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
+<p>get_teacher_quizzes(request):</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Pas de description disponible.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>quizz_list(request):</p>
 <div class="ulist">
 <ul>
@@ -520,16 +532,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </div>
 </li>
-<li>
-<p>add_quizz(request):</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Pas de description disponible.</p>
-</li>
-</ul>
-</div>
-</li>
 </ul>
 </div>
 </div>
@@ -538,20 +540,29 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
+<p>path('api/quizzlist/', views.QuizzListView.as_view(), name='quizz-list'),</p>
+</li>
+<li>
+<p>path('api/quizzlist/&lt;int:quizz_id&gt;/', views.QuizzDetailView.as_view(), name='quizz-detail'),</p>
+</li>
+<li>
+<p>path('api/quizzlist/add/', views.CreateQuizzView.as_view(), name='create_quizz'),</p>
+</li>
+<li>
+<p>path('api/teacher/&lt;int:teacher_id&gt;/quizzes/', views.get_teacher_quizzes, name='get-teacher-quizzes'),</p>
+</li>
+<li>
 <p>path('', views.quizz_list, name='quizz_list'),</p>
 </li>
 <li>
 <p>path('&lt;int:quizz_id&gt;/', views.quizz_detail, name='quizz_detail'),</p>
-</li>
-<li>
-<p>path('add/', views.add_quizz, name='add_quizz'),</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_application_users">Application : users</h3>
+<h3 id="_application_activity">Application : activity</h3>
 <div class="sect3">
 <h4 id="_modèles_2">Modèles</h4>
 <div class="paragraph">
@@ -560,6 +571,27 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="sect3">
 <h4 id="_vues_2">Vues</h4>
+<div class="paragraph">
+<p><em>Aucune vue trouvée.</em></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_endpoints_dapi_2">Endpoints d&#8217;API</h4>
+<div class="paragraph">
+<p><em>Aucun endpoint trouvé.</em></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_application_users">Application : users</h3>
+<div class="sect3">
+<h4 id="_modèles_3">Modèles</h4>
+<div class="paragraph">
+<p><em>Aucun modèle trouvé.</em></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_vues_3">Vues</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -572,15 +604,60 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </div>
 </li>
+<li>
+<p>get_teacher(request):</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Pas de description disponible.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>get_parent(request):</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Pas de description disponible.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>get_student(request):</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Pas de description disponible.</p>
+</li>
+</ul>
+</div>
+</li>
 </ul>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_endpoints_dapi_2">Endpoints d&#8217;API</h4>
+<h4 id="_endpoints_dapi_3">Endpoints d&#8217;API</h4>
 <div class="ulist">
 <ul>
 <li>
 <p>path('api/teachers/', views.list_teachers, name='list-teachers'),</p>
+</li>
+<li>
+<p>path('api/register/', views.RegisterView.as_view(), name='register'),</p>
+</li>
+<li>
+<p>path('api/login/', views.LoginView.as_view(), name='login'),</p>
+</li>
+<li>
+<p>path('api/teacher/&lt;int:id&gt;/', views.get_teacher, name='get-teacher'),</p>
+</li>
+<li>
+<p>path('api/student/&lt;int:id&gt;/', views.get_student, name='get-student'),</p>
+</li>
+<li>
+<p>path('api/parent/&lt;int:id&gt;/', views.get_parent, name='get-parent'),</p>
 </li>
 </ul>
 </div>
@@ -589,15 +666,25 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="_application_lessons">Application : lessons</h3>
 <div class="sect3">
-<h4 id="_modèles_3">Modèles</h4>
+<h4 id="_modèles_4">Modèles</h4>
 <div class="paragraph">
 <p><em>Aucun modèle trouvé.</em></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_vues_3">Vues</h4>
+<h4 id="_vues_4">Vues</h4>
 <div class="ulist">
 <ul>
+<li>
+<p>get_teacher_lessons(request):</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Pas de description disponible.</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>subjects_list(request):</p>
 <div class="ulist">
@@ -652,7 +739,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect3">
-<h4 id="_endpoints_dapi_3">Endpoints d&#8217;API</h4>
+<h4 id="_endpoints_dapi_4">Endpoints d&#8217;API</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -668,6 +755,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>path('api/lessonslist/add', views.CreateLessonView.as_view(), name='create-lesson'),</p>
 </li>
 <li>
+<p>path('api/lessonslist/extract-pdf', views.ExtractPdfTextView.as_view(), name='extract_pdf_text'),</p>
+</li>
+<li>
+<p>path('api/teacher/&lt;int:teacher_id&gt;/lessons/', views.get_teacher_lessons, name='get-teacher-lessons'),</p>
+</li>
+<li>
 <p>path('', views.subjects_list, name='subjects_list'), # Liste des sujets sur l&#8217;entrée dans l&#8217;app</p>
 </li>
 <li>
@@ -681,6 +774,34 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li>
 <p>path('lessons/modify/&lt;int:lesson_id&gt;/', views.modify_lesson, name='modify_lesson'), #modifier une lecon</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_application_stats">Application : stats</h3>
+<div class="sect3">
+<h4 id="_modèles_5">Modèles</h4>
+<div class="paragraph">
+<p><em>Aucun modèle trouvé.</em></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_vues_5">Vues</h4>
+<div class="paragraph">
+<p><em>Aucune vue trouvée.</em></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_endpoints_dapi_5">Endpoints d&#8217;API</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>path('api/quizzresults/&lt;int:quizz_id&gt;/', views.QuizzResultsView.as_view(), name='quizz_results'),</p>
+</li>
+<li>
+<p>path('api/userQuizResults/&lt;int:user_id&gt;/', views.UserQuizzResultsView.as_view(), name='user_quizz_results'),</p>
 </li>
 </ul>
 </div>
@@ -725,7 +846,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-05 14:49:27 +0100
+Last updated 2025-01-31 21:44:01 +0100
 </div>
 </div>
 </body>
