@@ -17,8 +17,10 @@ jobs:
       - name: Install git-fame
         run: pip install git-fame
 
-      - name: Run git-fame
-        run: git-fame --no-merge --format markdown > git-fame-report.md
+      - name: Exclude merge commits and run git-fame
+        run: |
+          git log --no-merges --format='%H' > commit-list.txt
+          git-fame --format markdown --commits-file commit-list.txt > git-fame-report.md
 
       - name: Upload Git Fame Report as artifact
         uses: actions/upload-artifact@v4
