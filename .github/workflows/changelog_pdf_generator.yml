@@ -1,0 +1,27 @@
+name: Generate Changelog PDF
+
+on:
+  push:
+    branches:
+      - main  # Runs when changes are pushed to main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies (Pandoc, AsciiDoctor & LaTeX)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-xetex asciidoctor
+
+      - name: Convert AsciiDoc to PDF
+        run: pandoc docs/adoc/CHANGELOG.adoc -o CHANGELOG.pdf --pdf-engine=xelatex
+
+      - name: Upload PDF as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: changelog-pdf
+          path: CHANGELOG.pdf

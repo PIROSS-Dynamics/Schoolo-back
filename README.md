@@ -2,6 +2,11 @@
 
 [![Build Status](https://github.com/PIROSS-Dynamics/Schoolo-back/actions/workflows/backend_build.yml/badge.svg)](https://github.com/PIROSS-Dynamics/Schoolo-back/actions)
 
+[![Build Status](https://github.com/PIROSS-Dynamics/Schoolo-back/actions/workflows/changelog_pdf_generator.yml/badge.svg)](https://github.com/PIROSS-Dynamics/Schoolo-back/actions)
+
+[![Build Status](https://github.com/PIROSS-Dynamics/Schoolo-back/actions/workflows/git_fame.yml/badge.svg)](https://github.com/PIROSS-Dynamics/Schoolo-back/actions)
+
+
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=PIROSS-Dynamics_Schoolo-back&metric=code_smells&branch=develop)](https://sonarcloud.io/summary/new_code?id=PIROSS-Dynamics_Schoolo-back&branch=develop)
 [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=PIROSS-Dynamics_Schoolo-back)](https://sonarcloud.io/summary/new_code?id=PIROSS-Dynamics_Schoolo-back)
 

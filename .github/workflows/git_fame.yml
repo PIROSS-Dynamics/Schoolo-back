@@ -1,0 +1,27 @@
+name: Git Fame Report
+
+on:
+  push:
+    branches:
+      - main  # Exécute le workflow sur chaque push vers main
+  workflow_dispatch:  # Permet un lancement manuel
+
+jobs:
+  git-fame:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install git-fame
+        run: pip install git-fame
+
+      - name: Run git-fame
+        run: git-fame --format markdown > git-fame-report.md
+
+      - name: Upload Git Fame Report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: git-fame-report
+          path: git-fame-report.md
