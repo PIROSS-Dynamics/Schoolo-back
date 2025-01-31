@@ -17,8 +17,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y pandoc texlive-xetex asciidoctor
 
-      - name: Convert AsciiDoc to PDF
-        run: pandoc docs/adoc/CHANGELOG.adoc -o CHANGELOG.pdf --pdf-engine=xelatex
+      - name: Convert AsciiDoc to HTML (via AsciiDoctor)
+        run: |
+          asciidoctor docs/adoc/CHANGELOG.adoc -o CHANGELOG.html
+
+      - name: Convert HTML to PDF (via Pandoc)
+        run: pandoc CHANGELOG.html -o CHANGELOG.pdf --pdf-engine=xelatex
 
       - name: Upload PDF as Artifact
         uses: actions/upload-artifact@v4

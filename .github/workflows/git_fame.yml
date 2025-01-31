@@ -18,7 +18,7 @@ jobs:
         run: pip install git-fame
 
       - name: Run git-fame
-        run: git-fame --exclude-merge --branches "*" --format markdown > git-fame-report.md
+        run: git-fame --no-merge --format markdown > git-fame-report.md
 
       - name: Upload Git Fame Report as artifact
         uses: actions/upload-artifact@v4
