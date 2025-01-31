@@ -3,8 +3,7 @@ name: Git Fame Report
 on:
   push:
     branches:
-      - main  # Exécute le workflow sur chaque push vers main
-  workflow_dispatch:  # Permet un lancement manuel
+      - main  # Ne s'exécute que sur la branche main
 
 jobs:
   git-fame:
@@ -12,18 +11,26 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Récupérer tout l'historique et toutes les branches
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
       - name: Install git-fame
         run: pip install git-fame
 
-      - name: Exclude merge commits and run git-fame
-        run: |
-          git log --no-merges --format='%H' > commit-list.txt
-          git-fame --format markdown --commits-file commit-list.txt > git-fame-report.md
+      - name: Generate git-fame report
+        run: git-fame --format=markdown > .github/git_fame_report.md
 
-      - name: Upload Git Fame Report as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: git-fame-report
-          path: git-fame-report.md
+      - name: Commit and push report
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .github/git_fame_report.md
+          git commit -m "Update Git Fame report"
+          git push
+        continue-on-error: true  # Ne bloque pas le workflow si aucun changement
