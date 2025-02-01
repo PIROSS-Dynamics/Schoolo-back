@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "apps.quizz",
     "apps.users",
     "apps.stats",
-    "apps.guessword"
+    "apps.guessword",
     # Applications par défaut
     'django.contrib.admin',
     'django.contrib.auth',

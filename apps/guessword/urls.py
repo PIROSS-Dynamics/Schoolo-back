@@ -1,7 +1,6 @@
 from django.urls import path
-from . import views
+from .views import GetWordDataView
 
 urlpatterns = [
-    path('api/', views.get_word_data, name='guess_word'),  # Vue principale
-    path('api/check_translation/', views.check_translation, name='check_translation'),  
+    path('api/get_word/', GetWordDataView.as_view(), name='get_word_data'),
 ]
