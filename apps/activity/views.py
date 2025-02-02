@@ -237,3 +237,40 @@ class AcceptRelationView(APIView):
 
         # Réponse confirmant l'ajout de la relation
         return Response({"message": "Relation request accepted and relationship established."}, status=status.HTTP_200_OK)
+
+
+class SendMessageView(APIView):
+    """
+    Envoie un message d'un utilisateur à un autre et crée des notifications.
+    """
+
+    def post(self, request):
+        sender_id = request.data.get("sender_id")
+        receiver_id = request.data.get("receiver_id")
+        message = request.data.get("message")
+
+        if not sender_id or not receiver_id or not message:
+            return Response({"error": "Données manquantes"}, status=status.HTTP_400_BAD_REQUEST)
+
+        sender = get_object_or_404(User, id=sender_id)
+        receiver = get_object_or_404(User, id=receiver_id)
+
+        # Notification pour l'envoyeur
+        Notification.objects.create(
+            receiver=sender,
+            sender=sender,
+            title=f"Vous avez envoyé un message à {receiver.first_name} {receiver.last_name}",
+            description=f"Vous avez envoyé le message suivant : {message}",
+            type='system'
+        )
+
+        # Notification pour le receveur
+        Notification.objects.create(
+            receiver=receiver,
+            sender=sender,
+            title=f"Vous avez reçu un message de {sender.first_name} {sender.last_name}",
+            description=f"Vous avez reçu le message suivant : {message}",
+            type='message'
+        )
+
+        return Response({"message": "Message envoyé avec succès !"}, status=status.HTTP_201_CREATED)
