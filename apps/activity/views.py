@@ -101,8 +101,8 @@ class SendRelationRequestView(APIView):
         # Create the notification for the relationship request
         notification = Notification.objects.create(
             type='relation',
-            title='New Relationship Request',
-            description=f'{user.first_name} {user.last_name} has sent you a relationship request.',
+            title='Nouvelle demande de relation',
+            description=f'{user.first_name} {user.last_name} veut entrer en relation avec toi :O',
             sender=user,
             receiver=receiver
         )
@@ -199,6 +199,25 @@ class AcceptRelationView(APIView):
         # Marquer la notification comme lue
         notification.is_read = True
         notification.save()
+        
+        notificationsender_accept = Notification.objects.create(
+            type='system',
+            title='Votre demande de relation a été accepté !',
+            description=f'{notification.receiver.first_name} {notification.receiver.last_name} a accepté ta demande de relation',
+            sender=notification.receiver,
+            receiver=notification.sender
+        )
+        
+        notificationreceiver_accept = Notification.objects.create(
+            type='system',
+            title='Tu as accepté une nouvelle relation !',
+            description=f'{notification.sender.first_name} {notification.sender.last_name} est désormais une relation relation',
+            sender=notification.sender,
+            receiver=notification.receiver
+        )
+        
+        notificationreceiver_accept.save()
+        notificationsender_accept.save()
 
         # Réponse confirmant l'ajout de la relation
         return Response({"message": "Relation request accepted and relationship established."}, status=status.HTTP_200_OK)
