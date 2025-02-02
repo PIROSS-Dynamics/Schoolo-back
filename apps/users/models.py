@@ -29,6 +29,8 @@ class Student(User):
 
 # -- Teacher
 class Teacher(User):
+    
+    
 
     def __str__(self):
         return f"Teacher: {self.first_name} {self.last_name}"
@@ -38,8 +40,22 @@ class Teacher(User):
 
 # -- Parent
 class Parent(User):
-    children = models.ManyToManyField(Student)
+    
 
     def __str__(self):
         children_list = ", ".join([f"{child.first_name} {child.last_name}" for child in self.children.all()])
         return f"Parent: {self.first_name} {self.last_name} - Children: {children_list or 'None'}"
+
+class Relation(models.Model):
+    RELATION_TYPE_CHOICES = [
+        ('parent', 'Parent'),
+        ('school', 'school'),
+    ]
+    
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)  
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_relations')
+    relation_type = models.CharField(max_length=10, choices=RELATION_TYPE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.sender.first_name} {self.sender.last_name} - {self.student.first_name} {self.student.last_name} ({self.relation_type})"

@@ -14,6 +14,7 @@ urlpatterns = [
     path('quizz/', include('apps.quizz.urls')),
     path('users/', include('apps.users.urls')),
     path('stats/', include('apps.stats.urls')),
+    path('activity/', include('apps.activity.urls')),
     #Challenges
     path('guessword/', include('apps.guessword.urls')),
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
