@@ -96,7 +96,14 @@ class SendRelationRequestView(APIView):
             sender=user, receiver=receiver, type='relation', is_read=False
         ).exists()
         if existing_notification:
-            return Response({"error": "A pending relationship request already exists."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Une demande de relation est déjà en cours."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Check if a relationship already exists
+        existing_relation = Relation.objects.filter(sender=user, student=receiver).exists() | \
+                   Relation.objects.filter(sender=receiver, student=user).exists()
+                   
+        if existing_relation:
+            return Response({"error": "Vous êtes déjà en relation avec cet utilisateur"}, status=status.HTTP_400_BAD_REQUEST)
         
         # Create the notification for the relationship request
         notification = Notification.objects.create(
@@ -165,6 +172,15 @@ class AcceptRelationView(APIView):
 
         # Trouver l'utilisateur
         user = get_object_or_404(User, id=user_id)
+        
+        # Vérifier si une relation existe déjà entre les deux utilisateurs
+        existing_relation = Relation.objects.filter(
+            sender=notification.sender, student=notification.receiver
+        ).exists()
+
+        if existing_relation:
+            return Response({"error": "Vous êtes déjà en relation"}, status=status.HTTP_400_BAD_REQUEST)
+
 
         # Vérifier si la notification est de type 'relation'
         if notification.type != 'relation':
