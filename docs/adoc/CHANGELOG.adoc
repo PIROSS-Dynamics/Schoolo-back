@@ -1,5 +1,27 @@
 = 📜 Changelog
 
+=== [1.1.0] 24-01-2025
+
+==== 🌟 Nouvelles Features Principales
+- Ajout d'un système de notifications pour les utilisateurs connectés
+- Ajout de la possibilité pour les parents et professeurs d'ajouter un élève 
+- Ajout d'un système de messagerie avec les utilisateurs en relation
+
+==== Résumé des contributeurs pour cette version 1.1.0
+[cols="2,2", options="header"]
+|===
+| Fonctionnalité                 | Contributeurs
+| Notifications                 | Piravine JEYAMOHAN
+| Défi GuessWord                | Ronan BESNARD, Piravine JEYAMOHAN
+| Statistiques utilisateurs     | Hossein ZAER 
+| Messagerie                    | Piravine JEYAMOHAN, Ronan BESNARD 
+| Défi GuessCountry             | Romain CERNON 
+|===
+
+
+
+
+
 === [1.0.2] 31-01-2025
 - Corrections / Ajouts workflows et artefacts GitHub
 

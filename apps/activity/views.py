@@ -87,8 +87,14 @@ class SendRelationRequestView(APIView):
 
         email = request.data.get('email')
         if not email:
-            return Response({"error": "Email is required."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "L'email est requis."}, status=status.HTTP_400_BAD_REQUEST)
         
+        try:
+            student = Student.objects.get(email=email)
+        except Student.DoesNotExist:
+             return Response({"error": "Aucun étudiant ne possède cet email."}, status=status.HTTP_400_BAD_REQUEST)
+
+    
         receiver = get_object_or_404(User, email=email)
         
         # Check if a relationship request already exists
