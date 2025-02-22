@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "apps.stats",
     "apps.guessword",
     "apps.activity",
+    'apps.findcountry',
     # Applications par défaut
     'django.contrib.admin',
     'django.contrib.auth',

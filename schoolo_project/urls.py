@@ -4,6 +4,7 @@ from django.urls import include, path
 from django.conf.urls.static import static
 from .views import home
 
+
 urlpatterns = [
     #Page admin
     path('admin/', admin.site.urls),
@@ -17,4 +18,5 @@ urlpatterns = [
     path('activity/', include('apps.activity.urls')),
     #Challenges
     path('guessword/', include('apps.guessword.urls')),
+    path('findcountry/', include('apps.findcountry.urls')),
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
