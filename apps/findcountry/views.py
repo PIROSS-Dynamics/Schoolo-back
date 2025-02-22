@@ -20,3 +20,4 @@ class GetRandomCountry(View):
             "country_name_fr": selected_country["name_fr"],  # Nom en français pour l'affichage
             "country_name_en": selected_country["name_en"]   # Nom en anglais pour Mapbox
         })
+
