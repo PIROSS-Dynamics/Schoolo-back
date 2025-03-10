@@ -56,6 +56,7 @@ class UserQuizzResultsView(APIView):
                     'score': result.score,
                     'total': result.total,
                     'date': result.date,
+                    'subject' : result.quizz.subject
                 })
             return Response(results_data)
         except QuizzResult.DoesNotExist:

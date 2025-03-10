@@ -18,4 +18,4 @@ class QuizzResult(models.Model):
     )
 
     def __str__(self):
-        return f"Quizz: {self.quizz}, User: {self.user}, Score: {self.score} (Date: {self.date})"
+        return f"Quizz: {self.quizz.subject}, User: {self.user}, Score: {self.score} (Date: {self.date})"
