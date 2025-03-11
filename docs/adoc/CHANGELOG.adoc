@@ -1,6 +1,6 @@
 = 📜 Changelog
 
-
+=== [1.1.0] 11-03-2025
 ==== 🌟 Nouvelles Features Principales
 
 - Ajout d'un système de notifications pour les utilisateurs connectés
