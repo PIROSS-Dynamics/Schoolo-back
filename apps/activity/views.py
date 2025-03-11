@@ -87,18 +87,7 @@ class SendRelationRequestView(APIView):
 
         email = request.data.get('email')
         if not email:
-<<<<<<< HEAD
-            return Response({"error": "L'email est requis"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        student = get_object_or_404(Student,email = email)
-        print(student)
-        
-        if not student:
-            print(test)
-            return Response({"error": "Aucun élève ne possède cet email."}, status=status.HTTP_400_BAD_REQUEST)
-=======
             return Response({"error": "L'email est requis."}, status=status.HTTP_400_BAD_REQUEST)
->>>>>>> 1257869a1f8c052b6d9fb0b84e721a63e7d0e8a9
         
         try:
             student = Student.objects.get(email=email)

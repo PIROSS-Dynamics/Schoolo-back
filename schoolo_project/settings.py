@@ -16,6 +16,7 @@ from os import getenv
 from urllib.parse import urlparse
 from dotenv import load_dotenv
 
+
 load_dotenv()  # Charger les variables d'environnement depuis .env
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     "apps.stats",
     "apps.guessword",
     "apps.activity",
+    'apps.findcountry',
     # Applications par défaut
     'django.contrib.admin',
     'django.contrib.auth',
