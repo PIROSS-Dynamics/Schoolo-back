@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/lessonslist/add', views.CreateLessonView.as_view(), name='create-lesson'),
     path('api/lessonslist/extract-pdf', views.ExtractPdfTextView.as_view(), name='extract_pdf_text'),
     path('api/teacher/<int:teacher_id>/lessons/', views.get_teacher_lessons, name='get-teacher-lessons'),
+    path('api/lessonslist/like/<int:lesson_id>/', views.LikeLessonView.as_view(), name='like-lesson'),
 
     ## GESTION BACK ##
     path('', views.subjects_list, name='subjects_list'), # Liste des sujets sur l'entrée dans l'app

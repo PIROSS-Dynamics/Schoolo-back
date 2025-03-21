@@ -26,6 +26,7 @@ class Quizz(models.Model):
     number_of_questions = models.PositiveIntegerField()
     is_public = models.BooleanField(default=True)
     grade = models.IntegerField(choices=GRADE_CHOICES, default=1)  
+    likes = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title

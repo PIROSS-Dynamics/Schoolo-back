@@ -29,6 +29,7 @@ class Lesson(models.Model):
     is_public = models.BooleanField(default=True)
     description = models.TextField(blank=True, null=True)
     grade = models.IntegerField(choices=GRADE_CHOICES, default=1)  
+    likes = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title

@@ -103,6 +103,13 @@ def get_teacher_lessons(request, teacher_id):
     serializer = LessonSerializer(lessons, many=True)  
     return Response(serializer.data)
 
+class LikeLessonView(APIView):
+    def post(self, request, lesson_id):
+        lesson = get_object_or_404(Lesson, id=lesson_id)
+        lesson.likes += 1
+        lesson.save()
+        return Response({'likes': lesson.likes}, status=status.HTTP_200_OK)
+
 #### GESTION BACK ####
 
 def subjects_list(request):

@@ -165,6 +165,13 @@ def get_teacher_quizzes(request, teacher_id):
     serializer = QuizzSerializer(quizzes, many=True)  
     return Response(serializer.data)
 
+class LikeQuizzView(APIView):
+    def post(self, request, quizz_id):
+        quizz = get_object_or_404(Quizz, id=quizz_id)
+        quizz.likes += 1
+        quizz.save()
+        return Response({'likes': quizz.likes}, status=status.HTTP_200_OK)
+
 #### GESTION BACK ####
 
 def quizz_list(request):
