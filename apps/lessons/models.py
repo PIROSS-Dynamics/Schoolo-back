@@ -1,7 +1,5 @@
-
 from django.db import models
 from apps.users.models import Teacher
-
 
 class Lesson(models.Model):
     SUBJECT_CHOICES = [
@@ -12,19 +10,25 @@ class Lesson(models.Model):
         ('Art', 'Art'),
     ]
 
+    GRADE_CHOICES = [
+        (1, 'CP'),
+        (2, 'CE1'),
+        (3, 'CE2'),
+        (4, 'CM1'),
+        (5, 'CM2'),
+    ]
+
     title = models.CharField(max_length=255)
-    subject = models.CharField(max_length=50, choices=SUBJECT_CHOICES)  # Utiliser les choix
+    subject = models.CharField(max_length=50, choices=SUBJECT_CHOICES)
     teacher = models.ForeignKey(
-        Teacher, 
-        on_delete=models.SET_NULL, 
-        null=True, 
+        Teacher,
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True)
-    
     content = models.TextField()
     is_public = models.BooleanField(default=True)
     description = models.TextField(blank=True, null=True)
+    grade = models.IntegerField(choices=GRADE_CHOICES, default=1)  
 
     def __str__(self):
         return self.title
-
-

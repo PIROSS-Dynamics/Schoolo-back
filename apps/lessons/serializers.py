@@ -6,7 +6,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ['id', 'subject', 'title', 'teacher_name', 'teacher', 'is_public', 'content', 'description']
+        fields = ['id', 'subject', 'title', 'teacher_name', 'teacher', 'is_public', 'content', 'description','grade']
         extra_kwargs = {
             'teacher': {'required': False}  # teacher field not requird for being able to not put it on update
         }
