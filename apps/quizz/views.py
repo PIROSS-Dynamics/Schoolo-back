@@ -118,6 +118,7 @@ class CreateQuizzView(APIView):
             teacher_id = data.get('teacher')
             is_public = data.get('is_public', False)
             questions_data = data.get('questions', [])
+            grade = data.get('grade')
             
             # Créer le quiz
             quiz = Quizz.objects.create(
@@ -125,7 +126,8 @@ class CreateQuizzView(APIView):
                 subject=subject,
                 teacher_id=teacher_id,
                 is_public=is_public,
-                number_of_questions=len(questions_data)
+                number_of_questions=len(questions_data),
+                grade=grade 
             )
 
             # Créer chaque question et ses choix (le cas échéant)

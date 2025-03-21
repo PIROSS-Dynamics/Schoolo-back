@@ -25,4 +25,4 @@ class QuizzSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Quizz
-        fields = ['id', 'title', 'subject', 'teacher_name', 'teacher_id', 'number_of_questions', 'questions']
+        fields = ['id', 'title', 'subject', 'teacher_name', 'teacher_id', 'number_of_questions', 'questions', 'grade']
