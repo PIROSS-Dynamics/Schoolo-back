@@ -53,7 +53,7 @@ class UserQuizzResultsView(APIView):
             results = QuizzResult.objects.filter(user_id=user_id)
             results_data = []
             for result in results:
-                reRsults_data.append({
+                results_data.append({
                     'quizz_title': result.quizz.title,
                     'score': result.score,
                     'total': result.total,
