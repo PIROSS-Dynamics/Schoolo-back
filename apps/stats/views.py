@@ -1,9 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from apps.stats.models import QuizzResult
+from rest_framework import status
+from apps.stats.models import QuizzResult, FindCountryResult, GuessWordResult
 from apps.quizz.models import Quizz
 from apps.users.models import User
 from django.utils.timezone import now
+from django.shortcuts import get_object_or_404
 
 class QuizzResultsView(APIView):
 
@@ -61,3 +63,67 @@ class UserQuizzResultsView(APIView):
             return Response(results_data)
         except QuizzResult.DoesNotExist:
             return Response({"error": "No quiz results found for this user."}, status=404)
+        
+
+
+class GuessWordResultView(APIView):
+    def post(self, request, *args, **kwargs):
+        user_id = request.data.get('user_id')
+        score = request.data.get('score')
+
+        if user_id is None or score is None:
+            return Response({"error": "user_id and score are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = get_object_or_404(User, id=user_id)
+
+        # Create a new GuessWordResult instance
+        guess_word_result = GuessWordResult(user=user, score=score)
+        guess_word_result.save()
+
+        return Response({"message": "GuessWordResult score saved successfully"}, status=status.HTTP_201_CREATED)
+
+class FindCountryResultView(APIView):
+    def post(self, request, *args, **kwargs):
+        user_id = request.data.get('user_id')
+        score = request.data.get('score')
+
+        if user_id is None or score is None:
+            return Response({"error": "user_id and score are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = get_object_or_404(User, id=user_id)
+
+        # Create a new FindCountryResult instance
+        find_country_result = FindCountryResult(user=user, score=score)
+        find_country_result.save()
+
+        return Response({"message": "FindCountryResult score saved successfully"}, status=status.HTTP_201_CREATED)
+    
+
+class UserChallengeResultsView(APIView):
+    def get(self, request, *args, **kwargs):
+        user_id = request.query_params.get('user_id')
+
+        if user_id is None:
+            return Response({"error": "user_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = get_object_or_404(User, id=user_id)
+
+        # get results of user's challenges
+        guess_word_results = GuessWordResult.objects.filter(user=user)
+        find_country_results = FindCountryResult.objects.filter(user=user)
+
+        results = []
+
+        for result in guess_word_results:
+            results.append({
+                "challenge_type": "GuessWord",
+                "score": result.score
+            })
+
+        for result in find_country_results:
+            results.append({
+                "challenge_type": "FindCountry",
+                "score": result.score
+            })
+
+        return Response(results, status=status.HTTP_200_OK)

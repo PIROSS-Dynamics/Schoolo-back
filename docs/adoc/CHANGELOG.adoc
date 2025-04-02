@@ -1,4 +1,17 @@
 = 📜 Changelog
+=== [2.0.0] 02-04-2025
+==== 🌟 Nouvelles Features Principales
+- Calendrier (API google calendar)
+
+
+==== ✨ Nouvelles Petites Features
+- Systèmes de récompenses pour les élèves dans la page profil
+- Niveaux de classes pour les leçons et quizz (cp, ce1, ce2, cm1, cm2)
+- Système de likes sur les leçons et quizz
+- Timer sur les questions du Défi GuessWord
+
+
+
 
 === [1.1.0] 11-03-2025
 ==== 🌟 Nouvelles Features Principales

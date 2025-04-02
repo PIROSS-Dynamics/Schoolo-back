@@ -7,45 +7,49 @@ from rest_framework.decorators import api_view
 import jwt # for token
 from datetime import datetime, timedelta
 from django.conf import settings
-# from django.contrib.auth.hashers import check_password, make_password
-
-
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password
 
 class RegisterView(APIView):
     def post(self, request):
-
         data = request.data
         role = data.get('role', 'student')
-        
+
         if User.objects.filter(email=data['email']).exists():
             return Response({'error': 'Un utilisateur existe déjà avec cet email'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Create a user in dependance of the role choosed
+        # Hacher le mot de passe
+        hashed_password = make_password(data['password'])
+
+        # Créer un utilisateur en fonction du rôle choisi
         try:
-            if role == 'student':   
+            if role == 'student':
                 user = Student.objects.create(
                     first_name=data['first_name'],
                     last_name=data['last_name'],
                     email=data['email'],
-                    password=data['password'],  
+                    password=hashed_password,
                     experience_level=0,
-                    role=role
+                    role=role,
+                    is_hashed=True
                 )
             elif role == 'teacher':
                 user = Teacher.objects.create(
                     first_name=data['first_name'],
                     last_name=data['last_name'],
                     email=data['email'],
-                    password=data['password'],
-                    role=role
+                    password=hashed_password,
+                    role=role,
+                    is_hashed=True
                 )
             elif role == 'parent':
                 user = Parent.objects.create(
                     first_name=data['first_name'],
                     last_name=data['last_name'],
                     email=data['email'],
-                    password=data['password'],
-                    role=role
+                    password=hashed_password,
+                    role=role,
+                    is_hashed=True
                 )
             else:
                 return Response({'error': 'Ce rôle est invalide'}, status=status.HTTP_400_BAD_REQUEST)
@@ -53,7 +57,6 @@ class RegisterView(APIView):
             return Response({'message': 'Utilisateur crée avec succès'}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class LoginView(APIView):
     def post(self, request):
@@ -64,30 +67,57 @@ class LoginView(APIView):
         try:
             user = User.objects.get(email=email)
 
-            if (password == user.password):
-                # Generate a token
-                token = jwt.encode(
-                    {
-                        'id': user.id,
-                        'email': user.email,
-                        'exp': datetime.utcnow() + timedelta(hours=24)
-                    },
-                    settings.SECRET_KEY,
-                    algorithm='HS256'
-                )
+            if user.is_hashed:
+                # Vérifier le mot de passe haché
+                if check_password(password, user.password):
+                    # Générer un token
+                    token = jwt.encode(
+                        {
+                            'id': user.id,
+                            'email': user.email,
+                            'exp': datetime.utcnow() + timedelta(hours=24)
+                        },
+                        settings.SECRET_KEY,
+                        algorithm='HS256'
+                    )
 
-                return Response({
-                    'access': token,
-                    'first_name': user.first_name,
-                    'role': user.role,
-                    'id': user.id
-                }, status=status.HTTP_200_OK)
+                    return Response({
+                        'access': token,
+                        'first_name': user.first_name,
+                        'role': user.role,
+                        'id': user.id
+                    }, status=status.HTTP_200_OK)
+                else:
+                    return Response({'error': 'Le mot de passe ne correspond pas'}, status=status.HTTP_401_UNAUTHORIZED)
             else:
-                return Response({'error': 'Le mot de passe ne correspond pas'}, status=status.HTTP_401_UNAUTHORIZED)
+                # Vérifier le mot de passe non haché
+                if password == user.password:
+                    # Hacher le mot de passe et mettre à jour la base de données
+                    user.password = make_password(password)
+                    user.is_hashed = True
+                    user.save()
+
+                    # Générer un token
+                    token = jwt.encode(
+                        {
+                            'id': user.id,
+                            'email': user.email,
+                            'exp': datetime.utcnow() + timedelta(hours=24)
+                        },
+                        settings.SECRET_KEY,
+                        algorithm='HS256'
+                    )
+
+                    return Response({
+                        'access': token,
+                        'first_name': user.first_name,
+                        'role': user.role,
+                        'id': user.id
+                    }, status=status.HTTP_200_OK)
+                else:
+                    return Response({'error': 'Le mot de passe ne correspond pas'}, status=status.HTTP_401_UNAUTHORIZED)
         except User.DoesNotExist:
             return Response({'error': "Il n'y a aucun utilisateur existant avec cet email"}, status=status.HTTP_404_NOT_FOUND)
-
-
 
 
 @api_view(['GET'])
