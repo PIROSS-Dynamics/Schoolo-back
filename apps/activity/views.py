@@ -150,7 +150,8 @@ class UserRelationsView(APIView):
                 'relation_type': relation.relation_type,
                 'sender': {
                     'id': relation.sender.id,
-                    'name': f'{relation.sender.first_name} {relation.sender.last_name}'
+                    'name': f'{relation.sender.first_name} {relation.sender.last_name}',
+                    'email': f'{relation.sender.email}'
                 },
                 'student': {
                     'id': relation.student.id,

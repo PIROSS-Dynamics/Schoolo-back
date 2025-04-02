@@ -1,7 +1,5 @@
-
 from django.db import models
 from apps.users.models import Teacher
-
 
 class Lesson(models.Model):
     SUBJECT_CHOICES = [
